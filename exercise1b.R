@@ -18,6 +18,7 @@ samples = length(data)
 binom.test(larger_than_mu,samples,p=0.5, alt='less')
 #since p>0.05 we accept H0, we do not have sufficient evidence to say that
 #the  patients are less likely to wait less than 15 min than more than 15 min
+#with binomial sign test
 
 hist(data)
 #Wilcoxon signed rank test can not be done since the distribution of the data
