@@ -1,0 +1,460 @@
+---
+title: "Assignment 1"
+author: 'Group 67: Jamie Faber, Laurens Prast, Amal Salman'
+date: "27 February 2022"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+highlight: tango
+---
+```{r include = FALSE}
+options(digits=3)
+```
+
+# Imports
+```{r}
+library("ggpubr")
+#install.packages("pracma")
+library("pracma")
+```
+
+## Exercise 1
+***a)***
+**Checking normality of the data:**
+```{r, fig.height=3}
+data = c(15.4, 17.9, 19.0, 0.5, 15.9, 2.7, 6.2, 2.5, 4.7, 6.9, 10.8, 24.3, 5.6, 23.0, 10.7)
+qqnorm(data); hist(data)
+```
+```{r}
+shapiro.test(data)
+```
+p-value larger than confidence level: 0.05, therefore passed the test and can state that there exists no significant departure from normality.
+
+
+**Constructing a 97%-CI for $\mu$:**
+```{r}
+mean_data = mean(data)
+std_data = sd(data)
+n = length(data)
+
+error = qnorm(0.985)*std_data/sqrt(n)
+left = mean_data-error
+right = mean_data+error
+
+c(left, mean_data, right)     #mean and confidence interval
+```
+0.985 is used since 2-sided and confidence interval of 0.97. Normal distribution is used since we can assume normality.
+
+
+**Evaluating the sample size needed to provide that the length of the 97%-CI is at most 2:**
+```{r}
+E = 1
+
+min_sample_size = (qnorm(0.985)^2*std_data^2)/ E^2
+min_sample_size
+```
+2E=2 so E=1. And normal distribution is used since we can assume normality.
+
+Therefore, the sample size needed is estimated to be 281.
+
+
+**Computing a bootstrap 97%-CI for $\mu$:**
+```{r}
+B=1000
+Tstar=numeric(B)
+for(i in 1:B) {
+  Xstar=sample(data,replace=TRUE)
+  Tstar[i]=mean(Xstar) }
+
+Tstar15=quantile(Tstar,0.015)
+Tstar985=quantile(Tstar,0.985)
+```
+If we have a (small) sample from an unknown distribution and the distribution of X¯ is not close to normal, we cannot rely on the above (asympt.) normal CI. and we can use a bootstrap method
+
+**Comparing t-test and bootstrap method:**
+```{r}
+c(left, mean_data, right)
+c(2*mean_data-Tstar985,mean(Tstar),2*mean_data-Tstar15)
+```
+The bootstrap method has a smaller 97%-confidence interval compared to the method were we use the normal distribution.
+
+***b)***
+**T-test to verify the calim that the mean waiting time is less than 15 minutes**
+Assuming normality we can do the following t-test. We can state that there exists no significant departure from normality according to the shapiro test from part (a).
+```{r}
+mean(data)
+mu0 = 15
+
+t.test(data,mu=mu0,alt="less")
+```
+Since p-value < 0.05 we reject H0, which was that H0 is equal or larger than 15, and therefore accept H1, H1 was that mean < 15.
+
+We can see that the 95% confidence interval for the population mean is [inf;14.59] which means that at a significance level alpha = 0.05 we reject null hypothesis as long as the hypothesized value mu0 is below 14.59, otherwise the null hypothesis cannot be rejected.
+
+**Sign tests:**
+
+Binomial sign test:
+```{r}
+larger_than_mu = sum(data>mu0)
+samples = length(data)
+binom.test(larger_than_mu,samples,p=0.5, alt='less')
+```
+Since p > 0.05 we do not reject H0. We do not have sufficient evidence to say that the  patients are less likely to wait less than 15 min than more than 15 min with the binomial sign test.
+
+Wilcoxon signed rank test can not be used since the distribution of the data is not symmetric.
+```{r, fig.height=3}
+hist(data)
+```
+
+
+***c)***
+**Computing the powers of the t-test and sign test from b) at $\mu$ = 14 and $\mu$ = 13:**
+
+Power test for sign test and t-test with mu0=14:
+```{r}
+mu0_1= 13
+psign_13=numeric(B) ## will contain p-values of sign test
+pttest_13=numeric(B) ## will contain p-values of t-test
+
+for(i in 1:B) {
+   x=sample(data,replace=TRUE)
+   pttest_13[i]=t.test(x,mu=mu0_1,alt="less")[[3]] ## extract p-value
+   psign_13[i]=binom.test(sum(x>mu0),length(data),p=0.5, alt="less")[[3]]} ## extract p-value
+
+#percentage of t test/sign tests that are lower than 0.05. T tests have a lot
+#larger percentage of tests that reject the H0.
+sum(psign_13<0.05)/B
+sum(pttest_13<0.05)/B
+
+#power test for sign test and t-test with mu0=14
+mu0_2 = 14
+psign_14=numeric(B) ## will contain p-values of sign test
+pttest_14=numeric(B) ## will contain p-values of t-test
+
+for(i in 1:B) {
+  x=sample(data,replace=TRUE)
+  pttest_14[i]=t.test(x,mu=mu0_2,alt="less")[[3]] ## extract p-value
+  psign_14[i]=binom.test(sum(x>mu0),length(data),p=0.5, alt="less")[[3]]} ## extract p-value
+
+#percentage of t test/sign tests that are lower than 0.05. T tests have a lot
+#larger percentage of test than reject the H0.
+sum(psign_14<0.05)/B
+sum(pttest_14<0.05)/B
+```
+The t-test rejects the H0 more than the sign test for both $\mu$ = 13 and $\mu$ = 14, which means that the wit the t-test the H1 is accepted more which was that mean < 15. What is also clearly seen for the t-test is the H1 is accepted more when $\mu$ = 14 compared to $\mu$ = 13. This is not the case for the sign test were H1 is accepted roughly the same amount.
+
+***d)***
+**Recovering the whole confidence interval and its confidence level:**
+```{r}
+s = sd(data)
+n = length(data)
+
+# z-score is probability
+pr = 0.53 # right end confidence interval
+x <- sum(data>15.5)/n # sum of values > 15.5 / total
+m <- pr-x # cause pr = x+m, m is error margin
+pl <- x-m;pl # left end confidence interval
+cv <- (sqrt(n)*m)/s # cause m = cv*s/sqrt(n), is critical value (1.96 in ppt)
+area <- 0.5398 # for cv 0.10 read from z-score table
+alpha <- (1-area/2);alpha # don't actually need alpha cl is area/2
+cl <- 1-alpha;cl # confidence level
+```
+Thus, the confidence interval is [0.137, 0.530] and its confidence level is 0.27.
+
+***e)***
+**Verifying the claim that the waiting time is different for men and women using the chi squared test:**
+
+```{r}
+tab = matrix(c(3,2,4,6), ncol=2, byrow=TRUE)
+tab
+colnames(tab) = c('men', 'women')
+rownames(tab) = c('more than 15.5', 'less than 15.5')
+
+tab <- as.table(tab)
+
+tab
+chisq.test(tab) 
+```
+As the p-value 0.8548 is greater than the .05 significance level, we do not reject the null hypothesis that the waiting time is below or above 15.5 min is independent of the fact that if you are a man or woman. So the claim of the researcher that the waiting time is different for men and women is not proven  based on the chi squared test.
+
+## Exercise 2
+***a)***
+**Testing whether silver nitrate has an effect:**
+
+Plots:
+```{r, fig.height=3}
+clouds=read.table(file="clouds.txt",header=TRUE)
+clouds
+```
+```{r}
+par(mfrow=c(2,2))
+
+qqnorm(clouds$seeded);hist(clouds$seeded)
+qqnorm(clouds$unseeded);hist(clouds$unseeded)
+```
+
+Normality test:
+```{r}
+shapiro.test(clouds$seeded)
+shapiro.test(clouds$unseeded)
+```
+Equal variances:
+```{r, fig.height=3}
+par(mfrow=c(1,2))
+boxplot(clouds$seeded);boxplot(clouds$unseeded)
+```
+f test significant so significant differences between variances
+```{r}
+var.test(clouds$seeded, clouds$unseeded, alternative = "two.sided")
+```
+
+two samples t-test:
+```{r}
+t.test(clouds$seeded,clouds$unseeded,alternative = "greater")
+```
+
+Mann-Whitney test:
+```{r}
+wilcox.test(clouds$seeded,clouds$unseeded,alternative = "greater")
+```
+
+Kolmogorov-Smirnov test:
+```{r}
+ks.test(clouds$unseeded,clouds$seeded,alternative = "greater")
+```
+
+Is data paired? 
+Chose clouds so independent/not paired, also clouds aren’t identical, think twins for paired test or the same person/thing used twice.
+
+Are tests applicable?
+Mann-Whitney and Kolmogorov need the samples to come from different populations, so be independent. This assumption can be withhold.
+
+T-test isn't applicable due to assumption of normality being violated. Variances also significantly differ so t.test cannot be used with var.equal = true. 
+
+Comment on findings:
+Non parametric tests more significant due to outliers for which these tests aren't as sensitive for, since Mann-Whitney is a rank test (median) and Kolmogorov checks the differences of the verticality of the histograms, since outliers, rare, verticality of histogram for outlier small.
+
+***b)***
+**Repeat (a) with square root transformation:**
+```{r}
+sqrtseeded <- sqrt(clouds$seeded)
+sqrtunseeded <- sqrt(clouds$unseeded)
+```
+Plots:
+```{r}
+par(mfrow=c(2,2))
+qqnorm(sqrtseeded);hist(sqrtseeded)
+qqnorm(sqrtunseeded);hist(sqrtunseeded)
+```
+Normality test:
+```{r}
+shapiro.test(sqrtseeded)
+shapiro.test(sqrtunseeded)
+```
+Equal variances:
+```{r, fig.height=3}
+par(mfrow=c(1,2))
+boxplot(sqrtseeded)
+boxplot(sqrtunseeded)
+```
+f test significant if significant differences between variances
+```{r}
+var.test(sqrtseeded, sqrtunseeded, alternative = "two.sided")
+```
+Two samples t-test:
+```{r}
+t.test(sqrtseeded,sqrtunseeded,alternative = "greater")
+```
+Mann-Whitney test:
+```{r}
+wilcox.test(sqrtseeded,sqrtunseeded,alternative = "greater")
+```
+Kolmogorov-Smirnov test:
+```{r}
+ks.test(sqrtunseeded,sqrtseeded,alternative = "greater")
+```
+
+Still outliers while less large, t-test assumptions still violated, transformation doesn't affect ranked tests since ranks is still the same, also doesnt affect kolmogorov since frequency data points also still same.
+
+**Repeat (a) with square root of square root transformation:**
+```{r}
+sqrtsqrtseeded <- sqrt(sqrtseeded)
+sqrtsqrtunseeded <- sqrt(sqrtunseeded)
+```
+Plots:
+```{r}
+par(mfrow=c(2,2))
+qqnorm(sqrtsqrtseeded);hist(sqrtsqrtseeded)
+qqnorm(sqrtsqrtunseeded);hist(sqrtsqrtunseeded)
+```
+Normality test:
+```{r}
+shapiro.test(sqrtsqrtseeded)
+shapiro.test(sqrtsqrtunseeded)
+```
+Equal variances:
+```{r, fig.height=3}
+par(mfrow=c(1,2))
+boxplot(sqrtsqrtseeded)
+boxplot(sqrtsqrtunseeded)
+```
+f test significant so significant differences between variances
+```{r}
+var.test(sqrtsqrtseeded, sqrtsqrtunseeded, alternative = "two.sided")
+```
+two samples t-test:
+```{r}
+t.test(sqrtsqrtseeded,sqrtsqrtunseeded, var.equal = TRUE, alternative = "greater")
+```
+Mann-Whitney test:
+```{r}
+wilcox.test(sqrtsqrtseeded,sqrtsqrtunseeded,alternative = "greater")
+```
+Kolmogorov-Smirnov test:
+```{r}
+ks.test(sqrtsqrtunseeded,sqrtsqrtseeded,alternative = "greater")
+```
+Are tests now applicable with transformations?
+Mann whithey and kolmogorov were applicable the whole time, however now since only 1 outlier is left, t-test assumptions not violated. 
+P values similar, all around 0,01. (wouldn't it be expected t-test to be more, significant now assumptions are not violated? maybe due to outlier still having an influence)
+
+***c)***
+**Finding an estimate of $\lambda$ and constructing a 95%-CI for  $\lambda$:**
+```{r}
+c1 <- clouds$seeded
+lambda_est <- 1/mean(c1)
+n <- length(clouds$seeded)
+sd <- 1/lambda_est
+# CI
+z <- qnorm(1-0.025)
+CI_L <- (-z+sqrt(n))/(mean(c1)*sqrt(n));CI_L
+CI_R <- (z+sqrt(n))/(mean(c1)*sqrt(n));CI_R
+```
+
+**Bootstrap test:**
+```{r, fig.height=3}
+t=median(c1)
+t
+B=1000
+tstar=numeric(B)
+n=length(c1)
+for (i in 1:B){
+  xstar=rexp(n,lambda_est)
+  tstar[i]=median(xstar)}
+hist(tstar,prob=T)
+pl=sum(tstar<t)/B; pr=sum(tstar>t)/B; p=2*min(pl,pr)
+pl;pr;p
+```
+
+**Kolmogorov-Smirnov test:**
+```{r}
+cdf_x <- linspace(min(c1), max(c1), 101)
+sorted_c1 <- sort(c1);
+
+par(mfrow=c(1,1))
+c1_quantiles  <- linspace(0,1,length(c1))
+# plots actual values of clouds$seeded
+plot(sorted_c1,c1_quantiles)
+# line of expected values is exp dist with rate est lambda
+lines(cdf_x,pexp(cdf_x,lambda_est),type="l",col="blue",lwd=2)
+ks.test(clouds$seeded,"pexp", lambda_est)
+```
+
+***d)***
+**Verifying whether the median precipitation for seeded clouds is less than 300**
+```{r, fig.height=3}
+hist(clouds$seeded)
+```
+Not symmetric so cant use wilcox. 
+
+Binomial test:
+```{r}
+x <- sum(clouds$seeded<300)
+n <- length(clouds$seeded)
+binom.test(x,n,p=0.5,alt='less')
+```
+Not significant (P = 0.9622) so h0 not rejected: which is medians are the same
+
+**Checking whether the fraction of the seeded clouds with precipitation less than 30 is at most 25%:**
+
+Binomial test:
+```{r}
+x <- sum(clouds$seeded<30)
+binom.test(x,n,p=0.25,alt='less')
+```
+Not significant (P=0.08019) h0 not rejected: which is medians are the same
+
+
+## Exercise 3
+***a)***
+```{r}
+data=read.table(file="dogs.txt",header=TRUE)
+data
+```
+We cannot assume that the data was taken from normal populations because we have a very small sample size (only 10) and that is not enough to invoke the central limit theorem because we need a sample size of at least 30 to assume that.
+
+Furthermore, the distribution of the data is not normal as can be seen by the plot and normality test below.
+```{r, fig.height=3}
+qqnorm(data$isofluorane); hist(data$isofluorane)
+```
+```{r}
+shapiro.test(data$isofluorane)
+```
+
+***b)***
+**Checking whether the columns isofluorane and halothane are correlated:**
+
+Using Spearman’s rank correlation test because it does not assume normality.
+```{r, fig.height=3.5}
+cor.test(data$isofluorane, data$halothane, method = "spearman")
+```
+p-value > 0.05 so the colleration is not significant.
+
+**Verifying whether the distributions of the isofluorane and halothane columns are different:**
+
+The permutation test is applicable here because it doesn't assume normality and the sample size is small.
+```{r, fig.height=3}
+mystat=function(x,y) {mean(x-y)}
+B=1000; tstar=numeric(B)
+for (i in 1:B) {
+  datastar=t(apply(cbind(data[,1],data[,2]),1,sample))
+  tstar[i]=mystat(datastar[,1],datastar[,2]) }
+myt=mystat(data[,1],data[,2])
+myt
+hist(tstar)
+pl=sum(tstar<myt)/B
+pr=sum(tstar>myt)/B
+p=2*min(pl,pr)
+p
+```
+
+p-value > 0.05 so no significant difference.
+
+***c)***
+**One-way ANOVA test:**
+```{r}
+dataframe=data.frame(concentration=as.vector(as.matrix(data)),
+                     variety=factor(rep(1:3,each=10)))
+
+aov=lm(concentration~variety,data=dataframe)
+anova(aov)
+```
+
+p-value < 0.05 so factor variety is significant. So yes, the type of drug has an effect on the concentration of plasma epinephrine.
+
+**The estimated concentrations for each of the three anesthesia drugs:**
+```{r}
+summary(aov)
+```
+The estimated concentrations are 0.43 for isofluorane, 0.04 for halothane, and 0.42 for cyclopropane. It's worth noting that the p-value for halothane is the only one > 0.05.
+
+***d)***
+**Kruskal-Wallis test:**
+```{r}
+attach(dataframe); kruskal.test(concentration,variety)
+```
+p-value > 0.05 so factor variety is not significant.
+
+So no, the two tests don't arrive at the same conclusion. While the one-way ANOVA test has more power than the Kruskal-Wallis test, it might be less accurate in this situation because the population isn't normal and one-way ANOVA assumes normality while the Kruskal-Wallis test does not rely on the normality.
+
