@@ -80,4 +80,7 @@ group_by(data, rate) %>%
 hemoglobinaov3 =lm(hemoglobin ~ rate, data = data)
 anova(hemoglobinaov3)
 #with the one way anova we see that the p<0.05 and therefore the rate factor
-#gives significant different means for the hemoglobin.
+#gives significant different means for the hemoglobin. We can use the one way
+#anova test on this data set because the factor method is insignficant and
+#the interaction between the rate factor and the method factor is also
+#insignficant
