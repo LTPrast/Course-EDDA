@@ -17,6 +17,7 @@ options(digits=3)
 library("ggpubr")
 #install.packages("pracma")
 library("pracma")
+library("lme4")
 ```
 
 ## Exercise 1
@@ -458,3 +459,50 @@ p-value > 0.05 so factor variety is not significant.
 
 So no, the two tests don't arrive at the same conclusion. While the one-way ANOVA test has more power than the Kruskal-Wallis test, it might be less accurate in this situation because the population isn't normal and one-way ANOVA assumes normality while the Kruskal-Wallis test does not rely on the normality.
 
+## Exercise 5
+***a)***
+**Repeated Anova without interactions:**
+```{r}
+cream <- read.table(file="cream.txt",header=TRUE)
+cream
+cream$batch <- factor(cream$batch)
+cream$position <- factor(cream$position)
+cream$starter <- factor(cream$starter)
+aovcream <- lm(acidity~batch+position+starter,data=cream); anova(aovcream)
+summary(aovcream)
+qqnorm(residuals(aovcream))
+plot(fitted(aovcream),residuals(aovcream))
+```
+Three factors are relevant to look at so a three way Anova is used. Since the same starter combination is being tested multiple times in different locations a repeated measures test is used. So the test used is a three way repeated measure Anova.
+Position no significant effect (P = 0.411). However batch does have significant effect (P =0.00163) (not expected in question) and starter aslo has a significant effect (P = 2.904e-05). 
+From summary: p value starter2 no significant (p = 0.754), this is compared to starter1.
+QQplot is quite straight so assumption of normality is not violated and looking at the residuals plot the assumption of homogeneity of variances is also not violated. So the chosen Anova test is applicable.
+
+
+***b)***
+```{r}
+aovcream=lm(acidity~batch+starter,data=cream); anova(aovcream)
+summary(aovcream)
+```
+Batch is not an insignificant block variable, even though in the experiment design the batch was meant to be identical. However the position has no influence so can be considered an insignificant block element and be removed. The now two-way repeated measures Anova:
+Out of all the starters, only starter 4 is significant (P = 6.10e-05)
+
+
+
+***c)***
+**Friedman**
+```{r}
+friedman.test(acidity~batch | starter,data=cream)
+```
+Friedman test is a non parametric version of the repeated measures Anova. Whilst since the the assumptions for the repeated measure Anova are met, it makes more sense to use that test, no assumptions are violated **(double check this, difficult to check for effect starter, need to use post hoc test)** for the Friedman test, so it is possible to use it with acidity as response values, starter as the group and batch as block variables.
+
+***d)***
+```{r}
+creamlmer=lmer(acidity~starter+(1|batch),REML=FALSE,data=cream)
+summary(creamlmer)
+creamlmer1=lmer(acidity~(1|batch),data=cream,REML=FALSE)
+anova(creamlmer,creamlmer1)
+aovcream=lm(acidity~batch+starter,data=cream); anova(aovcream)
+summary(aovcream)
+```
+Using the same model as in b, however now the block model batch is model with a random effect. Since lmer doesn't give p-values, it is compared to the same model with out starters. The variance between these models gives us the significance of the starter **(need to do this?, what did he say about random effect model in lecture)**, Comparing the random effects model here with the fixed effect model in b), Starter 4 has the most significant effect on acidity in both models in lmer (T = 6.660). So similar results are found.
