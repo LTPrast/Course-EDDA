@@ -271,7 +271,7 @@ shapiro.test(sqrtseeded)
 ```{r, output.lines=-(1:4)}
 shapiro.test(sqrtunseeded)
 ```
-An improvement can be seen in the plots and 
+An improvement can be seen in the plots and Shapiro test. However the data still does not have a normal distribution.
 
 Equal variances:
 ```{r, fig.height=3, echo=-1}
@@ -282,7 +282,7 @@ boxplot(sqrtunseeded)
 ```{r, output.lines=5:6}
 var.test(sqrtseeded, sqrtunseeded, alternative = "two.sided")
 ```
-F test significant if significant differences between variances.
+There is still a significant difference in variance between the groups
 
 Two samples t-test:
 ```{r, output.lines=5:6}
@@ -297,7 +297,7 @@ Kolmogorov-Smirnov test:
 ks.test(sqrtunseeded,sqrtseeded,alternative = "greater")
 ```
 
-Still outliers while less large, t-test assumptions still violated, transformation doesn't affect ranked tests since ranks is still the same, also doesnt affect kolmogorov since frequency data points also still same.
+While the data set still contains outliers they are less large. T-test assumptions are still violated even though the resulting p-value is more significant. The transformation doesn't affect ranked tests nor Kolmogorov Smirnoff test since the rank and frequency of the data points is still the same.
 
 **Repeat (a) with square root of square root transformation:**
 ```{r echo=-3}
@@ -314,6 +314,8 @@ shapiro.test(sqrtsqrtseeded)
 ```{r, output.lines=-(1:4)}
 shapiro.test(sqrtsqrtunseeded)
 ```
+The data set is now normally distributed.
+
 Equal variances:
 ```{r, fig.height=3, echo=-1}
 par(mfrow=c(1,2))
@@ -323,7 +325,7 @@ boxplot(sqrtsqrtunseeded)
 ```{r, output.lines=5:6}
 var.test(sqrtsqrtseeded, sqrtsqrtunseeded, alternative = "two.sided")
 ```
-F test significant so significant differences between variances.
+The variance between groups is insignificant and can be considered equal.
 
 Two samples t-test:
 ```{r, output.lines=5:6}
@@ -338,8 +340,8 @@ Kolmogorov-Smirnov test:
 ks.test(sqrtsqrtunseeded,sqrtsqrtseeded,alternative = "greater")
 ```
 Are tests now applicable with transformations?
-Mann-Whithey and Kolmogorov were applicable the whole time, however now since only 1 outlier is left, t-test assumptions are not violated. 
-P=values similar, all around 0,01. (wouldn't it be expected t-test to be more, significant now assumptions are not violated? maybe due to outlier still having an influence)
+Mann-Whithey and Kolmogorov were applicable the whole time and now since only 1 outlier is left and the data is normal distributed the t-test assumptions are not violated. 
+P-values are similar, all around 0,01.The t-test is slightly more significant, which is to be expected due the power of the t-test. With out the remaining outlier it would most likely be even more significant.
 
 ***c)***
 **Finding an estimate of $\lambda$ and constructing a 95%-CI for  $\lambda$:**
@@ -350,9 +352,11 @@ n <- length(clouds$seeded)
 sd <- 1/lambda_est
 # CI
 z <- qnorm(1-0.025)
-CI_L <- (-z+sqrt(n))/(mean(c1)*sqrt(n));CI_L
-CI_R <- (z+sqrt(n))/(mean(c1)*sqrt(n));CI_R
+CI_L <- (-z+sqrt(n))/(mean(c1)*sqrt(n))
+CI_R <- (z+sqrt(n))/(mean(c1)*sqrt(n))
 ```
+Estimate of lambda = 0.00226
+CI around lambda: [0.00139,lambda_est,0.00313]
 
 **Bootstrap test:**
 ```{r, fig.height=2.4}
@@ -382,13 +386,13 @@ lines(cdf_x,pexp(cdf_x,lambda_est),type="l",col="blue",lwd=2)
 ```{r, output.lines=-(1:4), warning=FALSE}
 ks.test(clouds$seeded,"pexp", lambda_est)
 ```
-
+The plot shows what we are testing. Whether the blue line (exp(lambda_est)) has the same distribution as the sample data. The H0 (that the data distribution is the same) cannot be rejected (both bootstrap test and Kolmogorov are insignificant). Thus we conclude that the distribution of the data follows a exp(lambda_est) distribution.
 ***d)***
 **Verifying whether the median precipitation for seeded clouds is less than 300**
 ```{r, fig.height=2.4}
 hist(clouds$seeded)
 ```
-Not symmetric so cant use wilcox. 
+Not symmetric so cant use wilcoxon signed rank test. 
 
 Binomial test:
 ```{r, output.lines=5:6}
@@ -396,7 +400,7 @@ x <- sum(clouds$seeded<300)
 n <- length(clouds$seeded)
 binom.test(x,n,p=0.5,alt='less')
 ```
-Not significant (P-value = 0.9622) so h0 not rejected: which is medians are the same
+Not significant (P-value = 0.962) so h0 not rejected: which is medians are the same. Thus cannot conclude median precipitation is less than 300
 
 **Checking whether the fraction of the seeded clouds with precipitation less than 30 is at most 25%:**
 
@@ -405,7 +409,7 @@ Binomial test:
 x <- sum(clouds$seeded<30)
 binom.test(x,n,p=0.25,alt='less')
 ```
-Not significant (P-value = 0.08019) h0 not rejected: which is medians are the same
+Not significant (P-value = 0.0802) h0 not rejected: which is medians are the same. Thus cannot conclude the fraction of precipitation under 30 is at most 25%.
 
 
 ## Exercise 3
@@ -431,7 +435,7 @@ Using Spearman’s rank correlation test because it does not assume normality.
 ```{r, output.lines=5:6, warning=FALSE}
 cor.test(data$isofluorane, data$halothane, method = "spearman")
 ```
-p-value > 0.05 so the colleration is not significant.
+p-value > 0.05 so the correlation is not significant.
 
 **Verifying whether the distributions of the isofluorane and halothane columns are different:**
 
@@ -593,9 +597,9 @@ plot(fitted(aovcream),residuals(aovcream))
 ```
 
 Three factors are relevant to look at so a three way Anova is used. Since the same starter combination is being tested multiple times in different locations a repeated measures test is used. So the test used is a three way repeated measure Anova.
-Position no significant effect (P = 0.411). However batch does have significant effect (P =0.00163) (not expected in question) and starter aslo has a significant effect (P = 2.904e-05). 
-From summary: p value starter2 no significant (p = 0.754), this is compared to starter1.
-QQplot is quite straight so assumption of normality is not violated and looking at the residuals plot the assumption of homogeneity of variances is also not violated. So the chosen Anova test is applicable.
+Position no significant effect (P = 0.411). However batch does have significant effect (P =0.00163) (not expected in experiment design) and starter also has a significant effect (P = 2.904e-05). 
+From summary: p value starter2 not significant (p = 0.754), this is compared to starter1. Thus starter 1 and 2 do not significantly differ.
+QQplot is straight enough so assumption of normality is not violated and looking at the residuals plot the assumption of homogeneity of variances is also not violated. So the chosen Anova test is applicable.
 
 
 ***b)***
@@ -613,7 +617,7 @@ Out of all the starters, only starter 4 is significant (P = 6.10e-05)
 ```{r, output.lines=-(1:4)}
 friedman.test(acidity~batch | starter,data=cream)
 ```
-Friedman test is a non parametric version of the repeated measures Anova. Whilst since the the assumptions for the repeated measure Anova are met, it makes more sense to use that test, no assumptions are violated **(double check this, difficult to check for effect starter, need to use post hoc test)** for the Friedman test, so it is possible to use it with acidity as response values, starter as the group and batch as block variables.
+Friedman test is a non parametric version of the repeated measures Anova. Since the the assumptions for the repeated measure Anova are met, it makes more sense to use that test, no assumptions for Friedman's test (data is independent and data can be ranked) are violated. so it is possible to use it with acidity as response values, starter as the group and batch as block variables. However to see which starter of the starters causes the significant effect, a post hoc test would need to be applied. 
 
 ***d)***
 ```{r, output.lines=-(1:11)}
@@ -630,4 +634,4 @@ aovcream=lm(acidity~batch+starter,data=cream); anova(aovcream)
 ```{r, output.lines=-(1:9)}
 summary(aovcream)
 ```
-Using the same model as in b, however now the block model batch is model with a random effect. Since lmer doesn't give p-values, it is compared to the same model with out starters. The variance between these models gives us the significance of the starter **(need to do this?, what did he say about random effect model in lecture)**, Comparing the random effects model here with the fixed effect model in b), Starter 4 has the most significant effect on acidity in both models in lmer (T = 6.660). So similar results are found.
+Using the same model as in b, however now the block model batch is model with a random effect. Since lmer doesn't give p-values, it is compared to the same model with out starters. The variance between these models gives us the significance of the starter. Comparing the random effects model here with the fixed effect model in b), Starter 4 has the most significant effect on acidity in both models in lmer (T = 6.660). So similar results are found.
