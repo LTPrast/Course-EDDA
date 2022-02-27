@@ -10,24 +10,52 @@ highlight: tango
 ---
 ```{r include = FALSE}
 options(digits=3)
+options(knitr.duplicate.label = "allow")
 ```
 
-# Imports
-```{r}
+## Imports
+```{r, warning=FALSE, message=FALSE}
 library("ggpubr")
-#install.packages("pracma")
 library("pracma")
 library("lme4")
+library("dplyr")
 ```
+
+
+```{r include = FALSE}
+# to control output:
+# https://community.rstudio.com/t/showing-only-the-first-few-lines-of-the-results-of-a-code-chunk/6963/2
+library(knitr)
+hook_output <- knit_hooks$get("output")
+knit_hooks$set(output = function(x, options) {
+  lines <- options$output.lines
+  if (is.null(lines)) {
+    return(hook_output(x, options))  # pass to default hook
+  }
+  x <- unlist(strsplit(x, "\n"))
+  # more <- "..."
+  if (length(lines)==1) {        # first n lines
+    if (length(x) > lines) {
+      # truncate the output, but add ....
+      x <- c(head(x, lines))
+    }
+  } else {
+    x <- c(x[lines])
+  }
+  # paste these lines together
+  x <- paste(c(x, ""), collapse = "\n")
+  hook_output(x, options)
+})
+``` 
 
 ## Exercise 1
 ***a)***
 **Checking normality of the data:**
-```{r, fig.height=3}
+```{r, fig.height=3, echo=-1}
 data = c(15.4, 17.9, 19.0, 0.5, 15.9, 2.7, 6.2, 2.5, 4.7, 6.9, 10.8, 24.3, 5.6, 23.0, 10.7)
 qqnorm(data); hist(data)
 ```
-```{r}
+```{r, output.lines=-(1:4)}
 shapiro.test(data)
 ```
 p-value larger than confidence level: 0.05, therefore passed the test and can state that there exists no significant departure from normality.
@@ -51,14 +79,10 @@ c(left, mean_data, right)     #mean and confidence interval
 **Evaluating the sample size needed to provide that the length of the 97%-CI is at most 2:**
 ```{r}
 E = 1
-
 min_sample_size = (qnorm(0.985)^2*std_data^2)/ E^2
 min_sample_size
 ```
-2E=2 so E=1. And normal distribution is used since we can assume normality.
-
-Therefore, the sample size needed is estimated to be 281.
-
+2E=2 so E=1. And normal distribution is used since we can assume normality. Therefore, the sample size needed is estimated to be 281.
 
 **Computing a bootstrap 97%-CI for $\mu$:**
 ```{r}
@@ -71,43 +95,40 @@ for(i in 1:B) {
 Tstar15=quantile(Tstar,0.015)
 Tstar985=quantile(Tstar,0.985)
 ```
-If we have a (small) sample from an unknown distribution and the distribution of X¯ is not close to normal, we cannot rely on the above (asympt.) normal CI. and we can use a bootstrap method
+If we have a (small) sample from an unknown distribution and the distribution of X¯ is not close to normal, we cannot rely on the above (asympt.) normal CI. and we can use a bootstrap method.
 
 **Comparing t-test and bootstrap method:**
 ```{r}
-c(left, mean_data, right)
+c(left, mean_data, right) 
 c(2*mean_data-Tstar985,mean(Tstar),2*mean_data-Tstar15)
 ```
 The bootstrap method has a smaller 97%-confidence interval compared to the method were we use the normal distribution.
 
 ***b)***
 **T-test to verify the calim that the mean waiting time is less than 15 minutes**
-Assuming normality we can do the following t-test. We can state that there exists no significant departure from normality according to the shapiro test from part (a).
-```{r}
-mean(data)
-mu0 = 15
 
+Assuming normality we can do the following t-test. We can state that there exists no significant departure from normality according to the shapiro test from part (a).
+```{r, output.lines=-(1:4)}
+mu0 = 15
 t.test(data,mu=mu0,alt="less")
 ```
-Since p-value < 0.05 we reject H0, which was that H0 is equal or larger than 15, and therefore accept H1, H1 was that mean < 15.
-
-We can see that the 95% confidence interval for the population mean is [inf;14.59] which means that at a significance level alpha = 0.05 we reject null hypothesis as long as the hypothesized value mu0 is below 14.59, otherwise the null hypothesis cannot be rejected.
+Since p-value < 0.05 we reject H0, which was that H0 is equal to or larger than 15, and therefore accept H1 (that mean < 15). We can see that the 95% confidence interval for the population mean is [inf;14.59] which means that at a significance level alpha = 0.05 we reject null hypothesis as long as the hypothesized value mu0 is below 14.59, otherwise the null hypothesis cannot be rejected.
 
 **Sign tests:**
 
 Binomial sign test:
-```{r}
+```{r, output.lines=-(1:4)}
 larger_than_mu = sum(data>mu0)
 samples = length(data)
 binom.test(larger_than_mu,samples,p=0.5, alt='less')
 ```
-Since p > 0.05 we do not reject H0. We do not have sufficient evidence to say that the  patients are less likely to wait less than 15 min than more than 15 min with the binomial sign test.
+Since p-value > 0.05 we do not reject H0. We do not have sufficient evidence to say that the  patients are less likely to wait less than 15 min than more than 15 min with the binomial sign test.
 
-Wilcoxon signed rank test can not be used since the distribution of the data is not symmetric.
 ```{r, fig.height=3}
 hist(data)
 ```
 
+Wilcoxon signed rank test can not be used since the distribution of the data is not symmetric.
 
 ***c)***
 **Computing the powers of the t-test and sign test from b) at $\mu$ = 14 and $\mu$ = 13:**
@@ -168,13 +189,12 @@ Thus, the confidence interval is [0.137, 0.530] and its confidence level is 0.27
 
 ```{r}
 tab = matrix(c(3,2,4,6), ncol=2, byrow=TRUE)
-tab
 colnames(tab) = c('men', 'women')
 rownames(tab) = c('more than 15.5', 'less than 15.5')
-
 tab <- as.table(tab)
-
 tab
+```
+```{r, output.lines=-(1:4), warning=FALSE}
 chisq.test(tab) 
 ```
 As the p-value 0.8548 is greater than the .05 significance level, we do not reject the null hypothesis that the waiting time is below or above 15.5 min is independent of the fact that if you are a man or woman. So the claim of the researcher that the waiting time is different for men and women is not proven  based on the chi squared test.
@@ -184,44 +204,46 @@ As the p-value 0.8548 is greater than the .05 significance level, we do not reje
 **Testing whether silver nitrate has an effect:**
 
 Plots:
-```{r, fig.height=3}
+```{r include=FALSE}
 clouds=read.table(file="clouds.txt",header=TRUE)
 clouds
 ```
-```{r}
+```{r echo=-1}
 par(mfrow=c(2,2))
-
 qqnorm(clouds$seeded);hist(clouds$seeded)
 qqnorm(clouds$unseeded);hist(clouds$unseeded)
 ```
 
 Normality test:
-```{r}
+```{r, output.lines=-(1:4)}
 shapiro.test(clouds$seeded)
+```
+```{r, output.lines=-(1:4)}
 shapiro.test(clouds$unseeded)
 ```
 Equal variances:
-```{r, fig.height=3}
+```{r, fig.height=3, echo=-1}
 par(mfrow=c(1,2))
 boxplot(clouds$seeded);boxplot(clouds$unseeded)
 ```
-f test significant so significant differences between variances
-```{r}
+
+```{r, output.lines=5:6}
 var.test(clouds$seeded, clouds$unseeded, alternative = "two.sided")
 ```
+F test significant so significant differences between variances.
 
-two samples t-test:
-```{r}
+Two samples t-test:
+```{r, output.lines=5:6}
 t.test(clouds$seeded,clouds$unseeded,alternative = "greater")
 ```
 
 Mann-Whitney test:
-```{r}
+```{r, output.lines=5:6, warning=FALSE}
 wilcox.test(clouds$seeded,clouds$unseeded,alternative = "greater")
 ```
 
 Kolmogorov-Smirnov test:
-```{r}
+```{r, output.lines=5:6, warning=FALSE}
 ks.test(clouds$unseeded,clouds$seeded,alternative = "greater")
 ```
 
@@ -230,95 +252,94 @@ Chose clouds so independent/not paired, also clouds aren’t identical, think tw
 
 Are tests applicable?
 Mann-Whitney and Kolmogorov need the samples to come from different populations, so be independent. This assumption can be withhold.
-
 T-test isn't applicable due to assumption of normality being violated. Variances also significantly differ so t.test cannot be used with var.equal = true. 
 
-Comment on findings:
 Non parametric tests more significant due to outliers for which these tests aren't as sensitive for, since Mann-Whitney is a rank test (median) and Kolmogorov checks the differences of the verticality of the histograms, since outliers, rare, verticality of histogram for outlier small.
 
 ***b)***
 **Repeat (a) with square root transformation:**
-```{r}
-sqrtseeded <- sqrt(clouds$seeded)
-sqrtunseeded <- sqrt(clouds$unseeded)
-```
-Plots:
-```{r}
+```{r echo=-3}
+sqrtseeded <- sqrt(clouds$seeded); sqrtunseeded <- sqrt(clouds$unseeded)
+# Plots:
 par(mfrow=c(2,2))
 qqnorm(sqrtseeded);hist(sqrtseeded)
 qqnorm(sqrtunseeded);hist(sqrtunseeded)
 ```
+
 Normality test:
-```{r}
+```{r, output.lines=-(1:4)}
 shapiro.test(sqrtseeded)
+```
+```{r, output.lines=-(1:4)}
 shapiro.test(sqrtunseeded)
 ```
 Equal variances:
-```{r, fig.height=3}
+```{r, fig.height=3, echo=-1}
 par(mfrow=c(1,2))
 boxplot(sqrtseeded)
 boxplot(sqrtunseeded)
 ```
-f test significant if significant differences between variances
-```{r}
+```{r, output.lines=5:6}
 var.test(sqrtseeded, sqrtunseeded, alternative = "two.sided")
 ```
+F test significant if significant differences between variances.
+
 Two samples t-test:
-```{r}
+```{r, output.lines=5:6}
 t.test(sqrtseeded,sqrtunseeded,alternative = "greater")
 ```
 Mann-Whitney test:
-```{r}
+```{r, output.lines=5:6, warning=FALSE}
 wilcox.test(sqrtseeded,sqrtunseeded,alternative = "greater")
 ```
 Kolmogorov-Smirnov test:
-```{r}
+```{r, output.lines=5:6, warning=FALSE}
 ks.test(sqrtunseeded,sqrtseeded,alternative = "greater")
 ```
 
 Still outliers while less large, t-test assumptions still violated, transformation doesn't affect ranked tests since ranks is still the same, also doesnt affect kolmogorov since frequency data points also still same.
 
 **Repeat (a) with square root of square root transformation:**
-```{r}
-sqrtsqrtseeded <- sqrt(sqrtseeded)
-sqrtsqrtunseeded <- sqrt(sqrtunseeded)
-```
-Plots:
-```{r}
+```{r echo=-3}
+sqrtsqrtseeded <- sqrt(sqrtseeded); sqrtsqrtunseeded <- sqrt(sqrtunseeded)
+# Plots:
 par(mfrow=c(2,2))
 qqnorm(sqrtsqrtseeded);hist(sqrtsqrtseeded)
 qqnorm(sqrtsqrtunseeded);hist(sqrtsqrtunseeded)
 ```
 Normality test:
-```{r}
+```{r, output.lines=-(1:4)}
 shapiro.test(sqrtsqrtseeded)
+```
+```{r, output.lines=-(1:4)}
 shapiro.test(sqrtsqrtunseeded)
 ```
 Equal variances:
-```{r, fig.height=3}
+```{r, fig.height=3, echo=-1}
 par(mfrow=c(1,2))
 boxplot(sqrtsqrtseeded)
 boxplot(sqrtsqrtunseeded)
 ```
-f test significant so significant differences between variances
-```{r}
+```{r, output.lines=5:6}
 var.test(sqrtsqrtseeded, sqrtsqrtunseeded, alternative = "two.sided")
 ```
-two samples t-test:
-```{r}
+F test significant so significant differences between variances.
+
+Two samples t-test:
+```{r, output.lines=5:6}
 t.test(sqrtsqrtseeded,sqrtsqrtunseeded, var.equal = TRUE, alternative = "greater")
 ```
 Mann-Whitney test:
-```{r}
+```{r, output.lines=5:6, warning=FALSE}
 wilcox.test(sqrtsqrtseeded,sqrtsqrtunseeded,alternative = "greater")
 ```
 Kolmogorov-Smirnov test:
-```{r}
+```{r, output.lines=5:6, warning=FALSE}
 ks.test(sqrtsqrtunseeded,sqrtsqrtseeded,alternative = "greater")
 ```
 Are tests now applicable with transformations?
-Mann whithey and kolmogorov were applicable the whole time, however now since only 1 outlier is left, t-test assumptions not violated. 
-P values similar, all around 0,01. (wouldn't it be expected t-test to be more, significant now assumptions are not violated? maybe due to outlier still having an influence)
+Mann-Whithey and Kolmogorov were applicable the whole time, however now since only 1 outlier is left, t-test assumptions are not violated. 
+P=values similar, all around 0,01. (wouldn't it be expected t-test to be more, significant now assumptions are not violated? maybe due to outlier still having an influence)
 
 ***c)***
 **Finding an estimate of $\lambda$ and constructing a 95%-CI for  $\lambda$:**
@@ -334,9 +355,8 @@ CI_R <- (z+sqrt(n))/(mean(c1)*sqrt(n));CI_R
 ```
 
 **Bootstrap test:**
-```{r, fig.height=3}
+```{r, fig.height=2.4}
 t=median(c1)
-t
 B=1000
 tstar=numeric(B)
 n=length(c1)
@@ -349,57 +369,58 @@ pl;pr;p
 ```
 
 **Kolmogorov-Smirnov test:**
-```{r}
+```{r, fig.height=3}
 cdf_x <- linspace(min(c1), max(c1), 101)
 sorted_c1 <- sort(c1);
-
 par(mfrow=c(1,1))
 c1_quantiles  <- linspace(0,1,length(c1))
 # plots actual values of clouds$seeded
 plot(sorted_c1,c1_quantiles)
 # line of expected values is exp dist with rate est lambda
 lines(cdf_x,pexp(cdf_x,lambda_est),type="l",col="blue",lwd=2)
+```
+```{r, output.lines=-(1:4), warning=FALSE}
 ks.test(clouds$seeded,"pexp", lambda_est)
 ```
 
 ***d)***
 **Verifying whether the median precipitation for seeded clouds is less than 300**
-```{r, fig.height=3}
+```{r, fig.height=2.4}
 hist(clouds$seeded)
 ```
 Not symmetric so cant use wilcox. 
 
 Binomial test:
-```{r}
+```{r, output.lines=5:6}
 x <- sum(clouds$seeded<300)
 n <- length(clouds$seeded)
 binom.test(x,n,p=0.5,alt='less')
 ```
-Not significant (P = 0.9622) so h0 not rejected: which is medians are the same
+Not significant (P-value = 0.9622) so h0 not rejected: which is medians are the same
 
 **Checking whether the fraction of the seeded clouds with precipitation less than 30 is at most 25%:**
 
 Binomial test:
-```{r}
+```{r, output.lines=5:6}
 x <- sum(clouds$seeded<30)
 binom.test(x,n,p=0.25,alt='less')
 ```
-Not significant (P=0.08019) h0 not rejected: which is medians are the same
+Not significant (P-value = 0.08019) h0 not rejected: which is medians are the same
 
 
 ## Exercise 3
 ***a)***
-```{r}
+We cannot assume that the data was taken from normal populations because we have a very small sample size (only 10) and that is not enough to invoke the central limit theorem because we need a sample size of at least 30 to assume that. Furthermore, the distribution of the sample data is not normal as can be seen by the plot and normality test below.
+```{r include=FALSE}
 data=read.table(file="dogs.txt",header=TRUE)
 data
 ```
-We cannot assume that the data was taken from normal populations because we have a very small sample size (only 10) and that is not enough to invoke the central limit theorem because we need a sample size of at least 30 to assume that.
 
-Furthermore, the distribution of the data is not normal as can be seen by the plot and normality test below.
-```{r, fig.height=3}
+```{r, echo=-1}
+par(mfrow=c(2,1))
 qqnorm(data$isofluorane); hist(data$isofluorane)
 ```
-```{r}
+```{r, output.lines=-(1:4)}
 shapiro.test(data$isofluorane)
 ```
 
@@ -407,7 +428,7 @@ shapiro.test(data$isofluorane)
 **Checking whether the columns isofluorane and halothane are correlated:**
 
 Using Spearman’s rank correlation test because it does not assume normality.
-```{r, fig.height=3.5}
+```{r, output.lines=5:6, warning=FALSE}
 cor.test(data$isofluorane, data$halothane, method = "spearman")
 ```
 p-value > 0.05 so the colleration is not significant.
@@ -415,7 +436,7 @@ p-value > 0.05 so the colleration is not significant.
 **Verifying whether the distributions of the isofluorane and halothane columns are different:**
 
 The permutation test is applicable here because it doesn't assume normality and the sample size is small.
-```{r, fig.height=3}
+```{r, fig.height=2.4}
 mystat=function(x,y) {mean(x-y)}
 B=1000; tstar=numeric(B)
 for (i in 1:B) {
@@ -430,49 +451,147 @@ p=2*min(pl,pr)
 p
 ```
 
-p-value > 0.05 so no significant difference.
+p-value > 0.05 so no significant difference in the distributions of the isofluorane and halothane columns.
 
 ***c)***
 **One-way ANOVA test:**
-```{r}
+```{r, output.lines=4:5}
 dataframe=data.frame(concentration=as.vector(as.matrix(data)),
                      variety=factor(rep(1:3,each=10)))
-
 aov=lm(concentration~variety,data=dataframe)
 anova(aov)
 ```
 
-p-value < 0.05 so factor variety is significant. So yes, the type of drug has an effect on the concentration of plasma epinephrine.
+P-value < 0.05 so factor variety is significant. So yes, the type of drug has an effect on the concentration of plasma epinephrine.
 
 **The estimated concentrations for each of the three anesthesia drugs:**
-```{r}
+```{r, output.lines=10:13}
 summary(aov)
 ```
-The estimated concentrations are 0.43 for isofluorane, 0.04 for halothane, and 0.42 for cyclopropane. It's worth noting that the p-value for halothane is the only one > 0.05.
+The estimated concentrations are 0.43 for isofluorane, 0.04 for halothane, and 0.42 for cyclopropane. It's worth noting that the p-value for halothane is the only one greater than 0.05.
 
 ***d)***
 **Kruskal-Wallis test:**
-```{r}
+```{r, output.lines=-(1:4)}
 attach(dataframe); kruskal.test(concentration,variety)
 ```
-p-value > 0.05 so factor variety is not significant.
+p-value > 0.05 so factor variety is not significant. So no, the two tests don't arrive at the same conclusion. While the one-way ANOVA test has more power than the Kruskal-Wallis test, it might be less accurate in this situation because the population isn't normal and one-way ANOVA assumes normality while the Kruskal-Wallis test does not rely on the normality.
 
-So no, the two tests don't arrive at the same conclusion. While the one-way ANOVA test has more power than the Kruskal-Wallis test, it might be less accurate in this situation because the population isn't normal and one-way ANOVA assumes normality while the Kruskal-Wallis test does not rely on the normality.
+## Exercise 4
+***a)***
+**Randomization process to distribute 80 fishes:**
+```{r echo = TRUE, results = 'hide'}
+I=4; J=2; N=10
+rbind(rep(1:I,each=N*J),rep(1:J,N*I),sample(1:(N*I*J)))
+```
+
+4 rate factors 2 method factors and each specific combination is repeated 
+for 10 fishes. With this code the 80 fishes are distributed randomly 
+over all combinations of levels of factors rate and method.
+
+***b)***
+**Two-way ANOVA test:**
+```{r include = FALSE}
+data = read.table("hemoglobin.txt", header=TRUE)
+```
+```{r echo=-3, fig.height=3.5}
+#necessary other wise rate is numerical and should be categorical
+data$rate=as.factor(data$rate)
+par(mfrow=c(1,2))
+boxplot(hemoglobin ~ method, data = data) ; 
+boxplot(hemoglobin ~ rate, data = data)
+```
+```{r, echo=-1, fig.height=3.5}
+par(mfrow=c(1,2))
+interaction.plot(x.factor = data$rate, trace.factor = data$method, response = data$hemoglobin);
+interaction.plot(x.factor = data$method, trace.factor = data$rate, response = data$hemoglobin)
+```
+
+```{r, output.lines=4:7}
+hemoglobinaov=lm(hemoglobin ~ method * rate, data = data) 
+anova(hemoglobinaov)
+```
+The p-value for the interaction between method and the rate is larger than 0.05. So, there is no evidence for interaction between the two factor. Therefore we will create a new model without the interaction called the additive model.
+
+```{r, output.lines=4:6}
+hemoglobinaov2 =lm(hemoglobin ~ method + rate, data = data)
+anova(hemoglobinaov2)
+```
+With the two way anova additive model we can see that the method factor had a p-value > 0.05 and therefore has no  main effect for the outcome of this research. The rate factor has a p-value < 0.05 which means that the effect of different amounts of sulfamerazine that is given to the  brown trout gives significantly different amounts of hemoglobin in their blood.
+
+```{r, fig.height=2.5}
+qqnorm(residuals(hemoglobinaov2))
+qqline(residuals(hemoglobinaov2))
+```
+
+QQ plot looks like the residuals are normally distributed
+```{r, output.lines=-(1:4)}
+shapiro.test(residuals(hemoglobinaov2))
+```
+P-value > 0.05, therefore passed the test and can state that there exists no significant departure from normality. 
+```{r, output.lines=6:7, fig.height=3}
+plot(fitted(hemoglobinaov2),residuals(hemoglobinaov2))
+hemoglobinaov2
+```
+The spread in the residuals seems to be in the similar range for all the fitted values. So, we can assume equal variance in the residuals. Because the requirements of normality and the assumption of equal variances are met, we can use the two-way ANOVA test.
+
+
+***c)***
+**Factor with greater influence:**
+```{r, output.lines=-(1:3), message=FALSE}
+group_by(data, method, rate) %>%
+  summarise(
+    count = n(),
+    mean = mean(hemoglobin, na.rm = TRUE),
+    sd = sd(hemoglobin, na.rm = TRUE)
+  )
+```
+The rate factor has a significant main effect on the the amount of hemoglobin, while the method factor does not have a significant main effect on the amount of hemoglobin. So the rate factor has the greatest influence of the two. This is a good question, because one factor is significant and the other is not if both were insignificant than it would not be a good question.
+
+**Combination of rate and method that yields the highest hemoglobin:**
+Rate 2 and method B leads to a mean of 10.1, which is the highest hemoglobin yield when both factors are considered. When rate 3 and method A was used then the mean was eastimated to be 9.03.
+
+**Rate that leads to the highest mean hemoglobin:**
+```{r, output.lines=-(1:2)}
+group_by(data, rate) %>%
+  summarise(
+    count = n(),
+    mean = mean(hemoglobin, na.rm = TRUE),
+    sd = sd(hemoglobin, na.rm = TRUE)
+  )
+```
+When only the factor rate is considered then rate 2 gives the highest mean rate with a mean of 9.74 hemoglobin yield.
+
+***d)***
+**One-way ANOVA test:**
+```{r, output.lines=4:6}
+hemoglobinaov3 =lm(hemoglobin ~ rate, data = data)
+anova(hemoglobinaov3)
+```
+With the one-way anova we see that the p-value < 0.05 and therefore the rate factor gives significant different means for the hemoglobin. We can use the one-way anova test on this data set because the factor method is insignificant and the interaction between the rate factor and the method factor is also insignficant.
 
 ## Exercise 5
 ***a)***
 **Repeated Anova without interactions:**
-```{r}
+```{r include=FALSE}
 cream <- read.table(file="cream.txt",header=TRUE)
 cream
+```
+```{r, output.lines=4:7}
 cream$batch <- factor(cream$batch)
 cream$position <- factor(cream$position)
 cream$starter <- factor(cream$starter)
 aovcream <- lm(acidity~batch+position+starter,data=cream); anova(aovcream)
+```
+```{r, output.lines=10:23}
 summary(aovcream)
-qqnorm(residuals(aovcream))
+```
+```{r echo=-1}
+par(mfrow=c(1,2))
+qqnorm(residuals(aovcream)) ;
 plot(fitted(aovcream),residuals(aovcream))
 ```
+
 Three factors are relevant to look at so a three way Anova is used. Since the same starter combination is being tested multiple times in different locations a repeated measures test is used. So the test used is a three way repeated measure Anova.
 Position no significant effect (P = 0.411). However batch does have significant effect (P =0.00163) (not expected in question) and starter aslo has a significant effect (P = 2.904e-05). 
 From summary: p value starter2 no significant (p = 0.754), this is compared to starter1.
@@ -480,29 +599,35 @@ QQplot is quite straight so assumption of normality is not violated and looking 
 
 
 ***b)***
-```{r}
+```{r, output.lines=4:7}
 aovcream=lm(acidity~batch+starter,data=cream); anova(aovcream)
+```
+```{r, output.lines=-(1:9)}
 summary(aovcream)
 ```
 Batch is not an insignificant block variable, even though in the experiment design the batch was meant to be identical. However the position has no influence so can be considered an insignificant block element and be removed. The now two-way repeated measures Anova:
 Out of all the starters, only starter 4 is significant (P = 6.10e-05)
 
-
-
 ***c)***
 **Friedman**
-```{r}
+```{r, output.lines=-(1:4)}
 friedman.test(acidity~batch | starter,data=cream)
 ```
 Friedman test is a non parametric version of the repeated measures Anova. Whilst since the the assumptions for the repeated measure Anova are met, it makes more sense to use that test, no assumptions are violated **(double check this, difficult to check for effect starter, need to use post hoc test)** for the Friedman test, so it is possible to use it with acidity as response values, starter as the group and batch as block variables.
 
 ***d)***
-```{r}
+```{r, output.lines=-(1:11)}
 creamlmer=lmer(acidity~starter+(1|batch),REML=FALSE,data=cream)
 summary(creamlmer)
+```
+```{r, output.lines=5:7}
 creamlmer1=lmer(acidity~(1|batch),data=cream,REML=FALSE)
 anova(creamlmer,creamlmer1)
+```
+```{r, output.lines=4:7}
 aovcream=lm(acidity~batch+starter,data=cream); anova(aovcream)
+```
+```{r, output.lines=-(1:9)}
 summary(aovcream)
 ```
 Using the same model as in b, however now the block model batch is model with a random effect. Since lmer doesn't give p-values, it is compared to the same model with out starters. The variance between these models gives us the significance of the starter **(need to do this?, what did he say about random effect model in lecture)**, Comparing the random effects model here with the fixed effect model in b), Starter 4 has the most significant effect on acidity in both models in lmer (T = 6.660). So similar results are found.
