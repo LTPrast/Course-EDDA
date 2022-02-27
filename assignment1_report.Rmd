@@ -185,7 +185,7 @@ cl <- 1-alpha;cl # confidence level
 Thus, the confidence interval is [0.137, 0.530] and its confidence level is 0.27.
 
 ***e)***
-**Verifying the claim that the waiting time is different for men and women using the chi squared test:**
+**Verifying the claim that the waiting time is different for men and women using the Fisher exact test:**
 
 ```{r}
 tab = matrix(c(3,2,4,6), ncol=2, byrow=TRUE)
@@ -195,9 +195,9 @@ tab <- as.table(tab)
 tab
 ```
 ```{r, output.lines=-(1:4), warning=FALSE}
-chisq.test(tab) 
+fisher.test(tab)
 ```
-As the p-value 0.8548 is greater than the .05 significance level, we do not reject the null hypothesis that the waiting time is below or above 15.5 min is independent of the fact that if you are a man or woman. So the claim of the researcher that the waiting time is different for men and women is not proven  based on the chi squared test.
+Due to the small sample size Fisher's test is used. As the p-value 0.6084 is greater than the .05 significance level, we do not reject the null hypothesis that the waiting time is below or above 15.5 min is independent of the fact that if you are a man or woman. So the claim of the researcher that the waiting time is different for men and women is not proven  based on the Fisher's test.
 
 ## Exercise 2
 ***a)***
@@ -221,6 +221,7 @@ shapiro.test(clouds$seeded)
 ```{r, output.lines=-(1:4)}
 shapiro.test(clouds$unseeded)
 ```
+Plots show a very not normal data distribution which is confirmed with Shapiro's test.
 Equal variances:
 ```{r, fig.height=3, echo=-1}
 par(mfrow=c(1,2))
@@ -230,9 +231,9 @@ boxplot(clouds$seeded);boxplot(clouds$unseeded)
 ```{r, output.lines=5:6}
 var.test(clouds$seeded, clouds$unseeded, alternative = "two.sided")
 ```
-F test significant so significant differences between variances.
+F test significant so significant differences between variances so can't use assumption of equal variances in t-test.
 
-Two samples t-test:
+The seeded and unseeded clouds data set is not paired data. In the experiment design it is described as out of a sample of 52 clouds 26 are chosen, this already implies the clouds are separate 'individuals'. Not only that, clouds are unique and when it rains the cloud disappears (at least changes), which makes it impossible to use the same cloud twice. So we use an unpaired two samples t-test:
 ```{r, output.lines=5:6}
 t.test(clouds$seeded,clouds$unseeded,alternative = "greater")
 ```
@@ -247,14 +248,11 @@ Kolmogorov-Smirnov test:
 ks.test(clouds$unseeded,clouds$seeded,alternative = "greater")
 ```
 
-Is data paired? 
-Chose clouds so independent/not paired, also clouds aren’t identical, think twins for paired test or the same person/thing used twice.
-
 Are tests applicable?
-Mann-Whitney and Kolmogorov need the samples to come from different populations, so be independent. This assumption can be withhold.
-T-test isn't applicable due to assumption of normality being violated. Variances also significantly differ so t.test cannot be used with var.equal = true. 
+Mann-Whitney and Kolmogorov need the samples to be independent. Due to the unique nature of clouds and since the clouds are chosen from the same sample this assumption is withheld. 
+T-test isn't applicable due to assumption of normality being violated.
 
-Non parametric tests more significant due to outliers for which these tests aren't as sensitive for, since Mann-Whitney is a rank test (median) and Kolmogorov checks the differences of the verticality of the histograms, since outliers, rare, verticality of histogram for outlier small.
+Non parametric tests are more significant due to outliers for which these tests aren't as sensitive for. Mann-Whitney is a rank test (median) and Kolmogorov checks the differences of the verticality of the histograms, since outliers are infrequent, verticality of histogram for the outlier small.
 
 ***b)***
 **Repeat (a) with square root transformation:**
@@ -273,6 +271,8 @@ shapiro.test(sqrtseeded)
 ```{r, output.lines=-(1:4)}
 shapiro.test(sqrtunseeded)
 ```
+An improvement can be seen in the plots and 
+
 Equal variances:
 ```{r, fig.height=3, echo=-1}
 par(mfrow=c(1,2))
