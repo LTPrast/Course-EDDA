@@ -56,7 +56,7 @@ knit_hooks$set(output = function(x, options) {
 ```{r, fig.height=3, echo=-1}
 data = c(15.4, 17.9, 19.0, 0.5, 15.9, 2.7, 6.2, 2.5, 4.7, 6.9, 10.8, 24.3, 5.6, 23.0, 10.7)
 par(mfrow=c(1,2))
-qqnorm(data); hist(data)
+qqnorm(data);qqline(data); hist(data)
 ```
 ```{r, output.lines=-(1:4)}
 shapiro.test(data);
@@ -127,8 +127,9 @@ binom.test(larger_than_mu,samples,p=0.5, alt='less')
 ```
 Since p-value > 0.05 we do not reject H0. We do not have sufficient evidence to say that the  patients are less likely to wait less than 15 min than more than 15 min with the binomial sign test.
 
-```{r fig.height=3.5}
-boxplot(data)
+```{r fig.height=3,fig.width=3,fig.align='center'}
+boxplot(data, main="Boxplot",
+        ylab="time (mins)")
 ```
 
 While the histogram in a) does not seem symmetric, the above boxplot does. Also since a normal distribution is symmetric, which was found in a), the 
@@ -212,13 +213,15 @@ Plots:
 clouds=read.table(file="clouds.txt",header=TRUE)
 clouds
 ```
-```{r echo=-1, fig.height=7}
-par(mfrow=c(3,2))
-qqnorm(clouds$seeded);hist(clouds$seeded)
-qqnorm(clouds$unseeded);hist(clouds$unseeded)
-boxplot(clouds$seeded);boxplot(clouds$unseeded)
+```{r echo=-1, fig.height=3}
+par(mfrow=c(1,2))
+qqnorm(clouds$seeded);qqnorm(clouds$unseeded)
 ```
-
+```{r echo=-1, fig.height=5}
+par(mfrow=c(2,2))
+hist(clouds$seeded);hist(clouds$unseeded)
+boxplot(clouds$seeded,main='Boxplot seeded');boxplot(clouds$unseeded,main='Boxplot unseeded')
+```
 Normality test:
 ```{r, output.lines=-(1:4)}
 shapiro.test(clouds$seeded)
@@ -226,7 +229,7 @@ shapiro.test(clouds$seeded)
 ```{r, output.lines=-(1:4)}
 shapiro.test(clouds$unseeded)
 ```
-Plots show a very not normal data distribution which is confirmed with Shapiro's test. Box plots show the data consists of many outliers. 
+Plots show a very not normal data distribution which is confirmed with Shapiro's test. Box plots show the data consists of very large outliers. 
 
 The seeded and unseeded clouds data set is not paired data. In the experiment design it is described as out of a sample of 52 clouds 26 are chosen, this already implies the clouds are separate 'individuals'. Not only that, clouds are unique and when it rains the cloud disappears (at least changes), which makes it impossible to use the same cloud twice. So we use an unpaired two samples t-test. Since we are investigating whether the rainfall increases with silver nitrate we test one sided.
 ```{r, output.lines=5:6}
@@ -252,13 +255,16 @@ Non parametric tests are more significant due to outliers for which these tests 
 ***b)***
 **Repeat (a) with square root transformation:**
 
-```{r echo=-3, fig.height=7}
+```{r echo=-3, fig.height=5}
 sqrtseeded <- sqrt(clouds$seeded); sqrtunseeded <- sqrt(clouds$unseeded)
 # Plots:
-par(mfrow=c(3,2))
-qqnorm(sqrtseeded);hist(sqrtseeded)
-qqnorm(sqrtunseeded);hist(sqrtunseeded)
-boxplot(sqrtseeded);boxplot(sqrtunseeded)
+par(mfrow=c(2,2))
+qqnorm(sqrtseeded);qqnorm(sqrtunseeded)
+hist(sqrtseeded);hist(sqrtunseeded)
+```
+```{r echo=-3, fig.height=3}
+par(mfrow=c(1,2))
+boxplot(sqrtseeded,main='Boxplot sqrtseeded');boxplot(sqrtunseeded,main='Boxplot sqrtunseeded')
 ```
 
 Normality test:
@@ -286,13 +292,13 @@ ks.test(sqrtunseeded,sqrtseeded,alternative = "greater")
 While the data set still contains outliers they are less large. T-test assumptions are still violated even though the resulting p-value is more significant. The transformation doesn't affect the significance of the ranked tests nor Kolmogorov Smirnoff test since the rank and frequency of the data points is still the same.
 
 **Repeat (a) with square root of square root transformation:**
-```{r echo=-3, fig.height=7}
+```{r echo=-3, fig.height=6.5}
 sqrtsqrtseeded <- sqrt(sqrtseeded); sqrtsqrtunseeded <- sqrt(sqrtunseeded)
 # Plots:
 par(mfrow=c(3,2))
 qqnorm(sqrtsqrtseeded);qqnorm(sqrtsqrtunseeded)
 hist(sqrtsqrtseeded);hist(sqrtsqrtunseeded)
-boxplot(sqrtsqrtseeded);boxplot(sqrtsqrtunseeded)
+boxplot(sqrtsqrtseeded,main='Boxplot sqrtsqrtseeded');boxplot(sqrtsqrtunseeded,main='Boxplot sqrtsqrtunseeded')
 ```
 Normality test:
 ```{r, output.lines=-(1:4)}
@@ -342,7 +348,7 @@ CI around lambda: [0.00139,0.00313]
 
 
 **Bootstrap test:**
-```{r, fig.height=2.4}
+```{r, fig.height=3}
 t=median(c1);t
 B=1000
 tstar=numeric(B)
@@ -391,9 +397,9 @@ data=read.table(file="dogs.txt",header=TRUE)
 data
 ```
 
-```{r, echo=-1,fig.height=2.4}
+```{r, echo=-1,fig.height=3}
 par(mfrow=c(1,2))
-qqnorm(data$isofluorane); hist(data$isofluorane)
+qqnorm(data$isofluorane);qqline(data$isofluorane); hist(data$isofluorane)
 ```
 ```{r, output.lines=-(1:4)}
 shapiro.test(data$isofluorane)
@@ -439,10 +445,12 @@ anova(aov)
 
 P-value < 0.05 so factor variety is significant. So yes, the type of drug has an effect on the concentration of plasma epinephrine.
 
-```{r, fig.height=2.5}
+```{r, fig.height=3}
 par(mfrow=c(1,2))
 qqnorm(residuals(aov)); qqline(residuals(aov))
-plot(fitted(aov),residuals(aov))
+plot(fitted(aov),residuals(aov), main = "Residual Plot")
+```
+```{r, output.lines=-(1:4)}
 leveneTest(concentration~variety,data=dataframe)
 ```
 The plot of the residuals shows the assumption of normailty can withhold, however the spread in the residuals suggest that there is no equal variance in the residuals. To confirm this a Levenes test was performed (P < 0.05). Thus the equal variances assumption of the one-way ANOVA test is not met.
@@ -481,13 +489,17 @@ data = read.table("hemoglobin.txt", header=TRUE)
 #necessary other wise rate is numerical and should be categorical
 data$rate=as.factor(data$rate)
 par(mfrow=c(1,2))
-boxplot(hemoglobin ~ method, data = data) ; 
-boxplot(hemoglobin ~ rate, data = data)
+boxplot(hemoglobin ~ method, data = data,main = "Boxplot") ; 
+boxplot(hemoglobin ~ rate, data = data,main = "Boxplot")
 ```
-```{r, echo=-1, fig.height=3.5}
+```{r, echo=-1, fig.height=3}
 par(mfrow=c(1,2))
-interaction.plot(x.factor = data$rate, trace.factor = data$method, response = data$hemoglobin);
-interaction.plot(x.factor = data$method, trace.factor = data$rate, response = data$hemoglobin)
+interaction.plot(x.factor = data$rate, trace.factor = data$method, response = data$hemoglobin, main="Interaction Plot",
+        xlab="rate",
+        ylab="mean hemoglobin",trace.label = "method:");
+interaction.plot(x.factor = data$method, trace.factor = data$rate, response = data$hemoglobin, main="Interaction Plot",
+        xlab="rate",
+        ylab="hemoglobin",trace.label = "rate:")
 ```
 
 ```{r, output.lines=4:7}
@@ -506,7 +518,7 @@ With the two way anova additive model we can see that the method factor had a p-
 par(mfrow=c(1,2))
 qqnorm(residuals(hemoglobinaov2))
 qqline(residuals(hemoglobinaov2))
-plot(fitted(hemoglobinaov2),residuals(hemoglobinaov2))
+plot(fitted(hemoglobinaov2),residuals(hemoglobinaov2), main = "Boxplot")
 hemoglobinaov2
 ```
 
@@ -568,8 +580,10 @@ summary(aovcream)
 ```
 ```{r echo=-1, fig.height=3}
 par(mfrow=c(1,2))
-qqnorm(residuals(aovcream));plot(fitted(aovcream),residuals(aovcream))
-shapiro.test(residuals(aovcream))
+qqnorm(residuals(aovcream));qqline(residuals(aovcream));plot(fitted(aovcream),residuals(aovcream),main="Residual Plot")
+```
+```{r, output.lines=-(1:4)}
+shapiro.test(residuals(aovcream));
 ```
 
 Three factors are relevant to look at so a three way Anova is used. Since the same starter combination is being tested multiple times in different locations a repeated measures test is used. So the test used is a three way repeated measure Anova.
@@ -582,7 +596,7 @@ The plots and normality tests show the assumption of normality is not violated a
 ```{r, output.lines=4:7}
 aovcream=lm(acidity~batch+starter,data=cream); anova(aovcream)
 ```
-```{r, output.lines=-(1:9)}
+```{r, output.lines=(9:19)}
 summary(aovcream)
 ```
 Batch is not an insignificant block variable (P = 0.000735), even though in the experiment design the batch was meant to be identical. However the position has no influence so can be considered an insignificant block element (P = 4.816e-06) and be removed. The now two-way repeated measures Anova:
@@ -596,7 +610,7 @@ friedman.test(acidity~batch | starter,data=cream)
 Friedman test is a non parametric version of the repeated measures Anova. Since the the assumptions for the repeated measure Anova are met, it makes more sense to use that test, no assumptions for Friedman's test (data is independent and data can be ranked) are violated. so it is possible to use it with acidity as response values, starter as the group and batch as block variables. However to see which starter of the starters causes the significant effect, a post hoc test would need to be applied. 
 
 ***d)***
-```{r, output.lines=-(1:11)}
+```{r, output.lines=(12:24)}
 creamlmer=lmer(acidity~starter+(1|batch),REML=FALSE,data=cream)
 summary(creamlmer)
 ```
