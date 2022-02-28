@@ -496,9 +496,9 @@ boxplot(hemoglobin ~ rate, data = data,main = "Boxplot")
 par(mfrow=c(1,2))
 interaction.plot(x.factor = data$rate, trace.factor = data$method, response = data$hemoglobin, main="Interaction Plot",
         xlab="rate",
-        ylab="mean hemoglobin",trace.label = "method:");
+        ylab="hemoglobin",trace.label = "method:");
 interaction.plot(x.factor = data$method, trace.factor = data$rate, response = data$hemoglobin, main="Interaction Plot",
-        xlab="rate",
+        xlab="method",
         ylab="hemoglobin",trace.label = "rate:")
 ```
 
