@@ -19,6 +19,7 @@ library("ggpubr")
 library("pracma")
 library("lme4")
 library("dplyr")
+library("car")
 ```
 
 
@@ -472,6 +473,17 @@ anova(aov)
 
 P-value < 0.05 so factor variety is significant. So yes, the type of drug has an effect on the concentration of plasma epinephrine.
 
+```{r include = FALSE}
+par(mfrow=c(2,1))
+```
+
+```{r, fig.height=2.5}
+qqnorm(residuals(aov)); qqline(residuals(aov))
+plot(fitted(aov),residuals(aov))
+leveneTest(concentration~variety,data=dataframe)
+```
+The plot of the residuals shows the assumption of normailty can withhold, however the spread in the residuals suggest that there is no equal variance in the residuals. To confirm this a Levenes test was performed (P < 0.05). Thus the equal variances assumption of the one-way ANOVA test is not met.
+
 **The estimated concentrations for each of the three anesthesia drugs:**
 ```{r, output.lines=10:13}
 summary(aov)
@@ -483,7 +495,7 @@ The estimated concentrations are 0.43 for isofluorane, 0.04 for halothane, and 0
 ```{r, output.lines=-(1:4)}
 attach(dataframe); kruskal.test(concentration,variety)
 ```
-p-value > 0.05 so factor variety is not significant. So no, the two tests don't arrive at the same conclusion. While the one-way ANOVA test has more power than the Kruskal-Wallis test, it might be less accurate in this situation because the population isn't normal and one-way ANOVA assumes normality while the Kruskal-Wallis test does not rely on the normality.
+p-value > 0.05 so factor variety is not significant. So no, the two tests don't arrive at the same conclusion. While the one-way ANOVA test has more power than the Kruskal-Wallis test, it is less accurate in this situation because the assumption of equal variances is not met. The nonparametric Kruskal-Wallis test has less strict assumptions which are met and is thus more accurate.
 
 ## Exercise 4
 ***a)***
