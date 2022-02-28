@@ -52,8 +52,10 @@ knit_hooks$set(output = function(x, options) {
 ## Exercise 1
 ***a)***
 **Checking normality of the data:**
+
 ```{r, fig.height=3, echo=-1}
 data = c(15.4, 17.9, 19.0, 0.5, 15.9, 2.7, 6.2, 2.5, 4.7, 6.9, 10.8, 24.3, 5.6, 23.0, 10.7)
+par(mfrow=c(1,2))
 qqnorm(data); hist(data)
 ```
 ```{r, output.lines=-(1:4)}
@@ -125,7 +127,7 @@ binom.test(larger_than_mu,samples,p=0.5, alt='less')
 ```
 Since p-value > 0.05 we do not reject H0. We do not have sufficient evidence to say that the  patients are less likely to wait less than 15 min than more than 15 min with the binomial sign test.
 
-```{r, fig.height=3}
+```{r fig.height=3.5}
 boxplot(data)
 ```
 
@@ -205,16 +207,16 @@ Due to the small sample size Fisher's test is used. As the p-value 0.6084 is gre
 ## Exercise 2
 ***a)***
 **Testing whether silver nitrate has an effect:**
-
 Plots:
-```{r include=FALSE}
+```{r, include=FALSE}
 clouds=read.table(file="clouds.txt",header=TRUE)
 clouds
 ```
-```{r echo=-1}
-par(mfrow=c(2,2))
+```{r echo=-1, fig.height=7}
+par(mfrow=c(3,2))
 qqnorm(clouds$seeded);hist(clouds$seeded)
 qqnorm(clouds$unseeded);hist(clouds$unseeded)
+boxplot(clouds$seeded);boxplot(clouds$unseeded)
 ```
 
 Normality test:
@@ -224,17 +226,7 @@ shapiro.test(clouds$seeded)
 ```{r, output.lines=-(1:4)}
 shapiro.test(clouds$unseeded)
 ```
-Plots show a very not normal data distribution which is confirmed with Shapiro's test.
-Equal variances:
-```{r, fig.height=3, echo=-1}
-par(mfrow=c(1,2))
-boxplot(clouds$seeded);boxplot(clouds$unseeded)
-```
-
-```{r, output.lines=5:6}
-var.test(clouds$seeded, clouds$unseeded, alternative = "two.sided")
-```
-F test significant so significant differences between variances so can't use assumption of equal variances in t-test.
+Plots show a very not normal data distribution which is confirmed with Shapiro's test. Box plots show the data consists of many outliers. 
 
 The seeded and unseeded clouds data set is not paired data. In the experiment design it is described as out of a sample of 52 clouds 26 are chosen, this already implies the clouds are separate 'individuals'. Not only that, clouds are unique and when it rains the cloud disappears (at least changes), which makes it impossible to use the same cloud twice. So we use an unpaired two samples t-test. Since we are investigating whether the rainfall increases with silver nitrate we test one sided.
 ```{r, output.lines=5:6}
@@ -259,12 +251,14 @@ Non parametric tests are more significant due to outliers for which these tests 
 
 ***b)***
 **Repeat (a) with square root transformation:**
-```{r echo=-3}
+
+```{r echo=-3, fig.height=7}
 sqrtseeded <- sqrt(clouds$seeded); sqrtunseeded <- sqrt(clouds$unseeded)
 # Plots:
-par(mfrow=c(2,2))
+par(mfrow=c(3,2))
 qqnorm(sqrtseeded);hist(sqrtseeded)
 qqnorm(sqrtunseeded);hist(sqrtunseeded)
+boxplot(sqrtseeded);boxplot(sqrtunseeded)
 ```
 
 Normality test:
@@ -274,18 +268,7 @@ shapiro.test(sqrtseeded)
 ```{r, output.lines=-(1:4)}
 shapiro.test(sqrtunseeded)
 ```
-An improvement can be seen in the plots and Shapiro test. However the data still does not have a normal distribution.
-
-Equal variances:
-```{r, fig.height=3, echo=-1}
-par(mfrow=c(1,2))
-boxplot(sqrtseeded)
-boxplot(sqrtunseeded)
-```
-```{r, output.lines=5:6}
-var.test(sqrtseeded, sqrtunseeded, alternative = "two.sided")
-```
-There is still a significant difference in variance between the groups
+An improvement can be seen in the plots and Shapiro test. However the data still does not have a normal distribution and still consists of outliers.
 
 Two samples t-test:
 ```{r, output.lines=5:6}
@@ -303,12 +286,13 @@ ks.test(sqrtunseeded,sqrtseeded,alternative = "greater")
 While the data set still contains outliers they are less large. T-test assumptions are still violated even though the resulting p-value is more significant. The transformation doesn't affect the significance of the ranked tests nor Kolmogorov Smirnoff test since the rank and frequency of the data points is still the same.
 
 **Repeat (a) with square root of square root transformation:**
-```{r echo=-3}
+```{r echo=-3, fig.height=7}
 sqrtsqrtseeded <- sqrt(sqrtseeded); sqrtsqrtunseeded <- sqrt(sqrtunseeded)
 # Plots:
-par(mfrow=c(2,2))
-qqnorm(sqrtsqrtseeded);hist(sqrtsqrtseeded)
-qqnorm(sqrtsqrtunseeded);hist(sqrtsqrtunseeded)
+par(mfrow=c(3,2))
+qqnorm(sqrtsqrtseeded);qqnorm(sqrtsqrtunseeded)
+hist(sqrtsqrtseeded);hist(sqrtsqrtunseeded)
+boxplot(sqrtsqrtseeded);boxplot(sqrtsqrtunseeded)
 ```
 Normality test:
 ```{r, output.lines=-(1:4)}
@@ -317,18 +301,12 @@ shapiro.test(sqrtsqrtseeded)
 ```{r, output.lines=-(1:4)}
 shapiro.test(sqrtsqrtunseeded)
 ```
-The data set is now normally distributed.
+The data set is now normally distributed. Since the assumption of normality is not violated any more for the t-test, we also check to see if the variances are equal. To do this we use the F-test:
 
-Equal variances:
-```{r, fig.height=3, echo=-1}
-par(mfrow=c(1,2))
-boxplot(sqrtsqrtseeded)
-boxplot(sqrtsqrtunseeded)
-```
 ```{r, output.lines=5:6}
 var.test(sqrtsqrtseeded, sqrtsqrtunseeded, alternative = "two.sided")
 ```
-The variance between groups is insignificant and can be considered equal.
+The variance between groups is insignificant and can be considered equal. 
 
 Two samples t-test:
 ```{r, output.lines=5:6}
@@ -362,20 +340,10 @@ cbind(CI_L,CI_R)
 Estimate of lambda = 0.00226
 CI around lambda: [0.00139,0.00313]
 
-```{r, fig.height=3}
-cdf_x <- linspace(min(c1), max(c1), 101)
-sorted_c1 <- sort(c1);
-par(mfrow=c(1,1))
-c1_quantiles  <- linspace(0,1,length(c1))
-# plots actual values of clouds$seeded
-plot(sorted_c1,c1_quantiles)
-# line of expected values is exp dist with rate est lambda
-lines(cdf_x,pexp(cdf_x,lambda_est),type="l",col="blue",lwd=2)
-```
 
 **Bootstrap test:**
 ```{r, fig.height=2.4}
-t=median(c1)
+t=median(c1);t
 B=1000
 tstar=numeric(B)
 n=length(c1)
@@ -391,13 +359,11 @@ cbind(pl,pr,p)
 ```{r, output.lines=-(1:4), warning=FALSE}
 ks.test(clouds$seeded,"pexp", lambda_est)
 ```
-The plot shows what we are testing. Whether the blue line (exp(lambda_est)) has the same distribution as the sample data. The H0 (that the data distribution is the same) cannot be rejected (both bootstrap test and Kolmogorov are insignificant). Thus we conclude that the distribution of the data follows a exp(lambda_est) distribution.
+Testing whether the data follows an exp(lambda_est) distribution: the H0 (that the data distribution is the same) cannot be rejected (both bootstrap test and Kolmogorov are insignificant). Thus we conclude that the distribution of the data follows a exp(lambda_est) distribution.
 ***d)***
 **Verifying whether the median precipitation for seeded clouds is less than 300**
-```{r, fig.height=2.4}
-hist(clouds$seeded)
-```
-Not symmetric so cant use wilcoxon signed rank test. 
+
+In a) we showed that the cloud data is not symmetric nor normal distributed. So we use a sign test. 
 
 Binomial test:
 ```{r, output.lines=5:6}
@@ -425,8 +391,8 @@ data=read.table(file="dogs.txt",header=TRUE)
 data
 ```
 
-```{r, echo=-1}
-par(mfrow=c(2,1))
+```{r, echo=-1,fig.height=2.4}
+par(mfrow=c(1,2))
 qqnorm(data$isofluorane); hist(data$isofluorane)
 ```
 ```{r, output.lines=-(1:4)}
@@ -473,11 +439,8 @@ anova(aov)
 
 P-value < 0.05 so factor variety is significant. So yes, the type of drug has an effect on the concentration of plasma epinephrine.
 
-```{r include = FALSE}
-par(mfrow=c(2,1))
-```
-
 ```{r, fig.height=2.5}
+par(mfrow=c(1,2))
 qqnorm(residuals(aov)); qqline(residuals(aov))
 plot(fitted(aov),residuals(aov))
 leveneTest(concentration~variety,data=dataframe)
@@ -539,21 +502,18 @@ anova(hemoglobinaov2)
 ```
 With the two way anova additive model we can see that the method factor had a p-value > 0.05 and therefore has no  main effect for the outcome of this research. The rate factor has a p-value < 0.05 which means that the effect of different amounts of sulfamerazine that is given to the  brown trout gives significantly different amounts of hemoglobin in their blood.
 
-```{r, fig.height=2.5}
+```{r, fig.height=3}
+par(mfrow=c(1,2))
 qqnorm(residuals(hemoglobinaov2))
 qqline(residuals(hemoglobinaov2))
-```
-
-QQ plot looks like the residuals are normally distributed
-```{r, output.lines=-(1:4)}
-shapiro.test(residuals(hemoglobinaov2))
-```
-P-value > 0.05, therefore passed the test and can state that there exists no significant departure from normality. 
-```{r, output.lines=6:7, fig.height=3}
 plot(fitted(hemoglobinaov2),residuals(hemoglobinaov2))
 hemoglobinaov2
 ```
-The spread in the residuals seems to be in the similar range for all the fitted values. So, we can assume equal variance in the residuals. Because the requirements of normality and the assumption of equal variances are met, we can use the two-way ANOVA test.
+
+```{r, output.lines=-(1:4)}
+shapiro.test(residuals(hemoglobinaov2))
+```
+QQ plot looks like the residuals are normally distributed. For the Shapiro's test the p-value > 0.05, therefore passed the test and can state that there exists no significant departure from normality. The spread in the residuals seems to be in the similar range for all the fitted values. So, we can assume equal variance in the residuals. Because the requirements of normality and the assumption of equal variances are met, we can use the two-way ANOVA test.
 
 
 ***c)***
@@ -606,7 +566,7 @@ aovcream <- lm(acidity~batch+position+starter,data=cream); anova(aovcream)
 ```{r, output.lines=10:23}
 summary(aovcream)
 ```
-```{r echo=-1}
+```{r echo=-1, fig.height=3}
 par(mfrow=c(1,2))
 qqnorm(residuals(aovcream));plot(fitted(aovcream),residuals(aovcream))
 shapiro.test(residuals(aovcream))
