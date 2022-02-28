@@ -593,6 +593,7 @@ The plots and normality tests show the assumption of normality is not violated a
 
 
 ***b)***
+**Removed insignificant block variables**
 ```{r, output.lines=4:7}
 aovcream=lm(acidity~batch+starter,data=cream); anova(aovcream)
 ```
@@ -610,6 +611,7 @@ friedman.test(acidity~batch | starter,data=cream)
 Friedman test is a non parametric version of the repeated measures Anova. Since the the assumptions for the repeated measure Anova are met, it makes more sense to use that test, no assumptions for Friedman's test (data is independent and data can be ranked) are violated. so it is possible to use it with acidity as response values, starter as the group and batch as block variables. However to see which starter of the starters causes the significant effect, a post hoc test would need to be applied. 
 
 ***d)***
+**Model with random effects**
 ```{r, output.lines=(12:24)}
 creamlmer=lmer(acidity~starter+(1|batch),REML=FALSE,data=cream)
 summary(creamlmer)
