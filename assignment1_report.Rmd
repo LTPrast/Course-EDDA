@@ -468,6 +468,13 @@ anova(aov)
 
 P-value < 0.05 so factor variety is significant. So yes, the type of drug has an effect on the concentration of plasma epinephrine.
 
+```{r, fig.height=2.5}
+qqnorm(residuals(aov)); qqline(residuals(aov))
+plot(fitted(aov),residuals(aov))
+```
+
+We can see from the QQ plot that the residuals are not normally distributed, and the spread in the residuals shows that there is no equal variance in the residuals, so both the normality and the equal variances assumptions of the one-way ANOVA test are not met.
+
 **The estimated concentrations for each of the three anesthesia drugs:**
 ```{r, output.lines=10:13}
 summary(aov)
@@ -479,7 +486,7 @@ The estimated concentrations are 0.43 for isofluorane, 0.04 for halothane, and 0
 ```{r, output.lines=-(1:4)}
 attach(dataframe); kruskal.test(concentration,variety)
 ```
-p-value > 0.05 so factor variety is not significant. So no, the two tests don't arrive at the same conclusion. While the one-way ANOVA test has more power than the Kruskal-Wallis test, it might be less accurate in this situation because the population isn't normal and one-way ANOVA assumes normality while the Kruskal-Wallis test does not rely on the normality.
+p-value > 0.05 so factor variety is not significant. So no, the two tests don't arrive at the same conclusion. While the one-way ANOVA test has more power than the Kruskal-Wallis test, it might be less accurate in this situation because both the normality and the equal variances assumptions of the one-way ANOVA test are not met, while the Kruskal-Wallis test does not rely on the normality.
 
 ## Exercise 4
 ***a)***
