@@ -1,0 +1,1448 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\title{Assignment 1}
+\author{Group 67: Jamie Faber, Laurens Prast, Amal Salman}
+\date{27 February 2022}
+
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Assignment 1},
+  pdfauthor={Group 67: Jamie Faber, Laurens Prast, Amal Salman},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\begin{document}
+\maketitle
+
+\hypertarget{imports}{%
+\subsection{Imports}\label{imports}}
+
+\hypertarget{exercise-1}{%
+\subsection{Exercise 1}\label{exercise-1}}
+
+\textbf{\emph{a)}} \textbf{Checking normality of the data:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\FunctionTok{qqnorm}\NormalTok{(data); }\FunctionTok{hist}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data);}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 0.9, p-value = 0.3
+\end{verbatim}
+
+Due to small sample size the plots vary more, however they don't show a
+clear non normal distribution nor does Shapiro's test find significance.
+P-value larger than confidence level: 0.05, therefore can state that
+there exists no significant departure from a normal distribution in the
+data set.
+
+\textbf{Constructing a 97\%-CI for \(\mu\):}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mean\_data }\OtherTok{=} \FunctionTok{mean}\NormalTok{(data)}
+\NormalTok{std\_data }\OtherTok{=} \FunctionTok{sd}\NormalTok{(data)}
+\NormalTok{n }\OtherTok{=} \FunctionTok{length}\NormalTok{(data)}
+
+\NormalTok{error }\OtherTok{=} \FunctionTok{qnorm}\NormalTok{(}\FloatTok{0.985}\NormalTok{)}\SpecialCharTok{*}\NormalTok{std\_data}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{(n)}
+\NormalTok{left }\OtherTok{=}\NormalTok{ mean\_data}\SpecialCharTok{{-}}\NormalTok{error}
+\NormalTok{right }\OtherTok{=}\NormalTok{ mean\_data}\SpecialCharTok{+}\NormalTok{error}
+
+\FunctionTok{c}\NormalTok{(left, mean\_data, right)     }\CommentTok{\#mean and confidence interval}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  6.74 11.07 15.40
+\end{verbatim}
+
+0.985 is used since 2-sided and confidence interval of 0.97. Normal
+distribution is used since we can assume normality.
+
+\textbf{Evaluating the sample size needed to provide that the length of
+the 97\%-CI is at most 2:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{E }\OtherTok{=} \DecValTok{1}
+\NormalTok{min\_sample\_size }\OtherTok{=}\NormalTok{ (}\FunctionTok{qnorm}\NormalTok{(}\FloatTok{0.985}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{*}\NormalTok{std\_data}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}\SpecialCharTok{/}\NormalTok{ E}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{min\_sample\_size}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 281
+\end{verbatim}
+
+2E=2 so E=1. And normal distribution is used since we can assume
+normality. Therefore, the sample size needed is estimated to be 281.
+
+\textbf{Computing a bootstrap 97\%-CI for \(\mu\):}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{B}\OtherTok{=}\DecValTok{1000}
+\NormalTok{Tstar}\OtherTok{=}\FunctionTok{numeric}\NormalTok{(B)}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{B) \{}
+\NormalTok{  Xstar}\OtherTok{=}\FunctionTok{sample}\NormalTok{(data,}\AttributeTok{replace=}\ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  Tstar[i]}\OtherTok{=}\FunctionTok{mean}\NormalTok{(Xstar) \}}
+
+\NormalTok{Tstar15}\OtherTok{=}\FunctionTok{quantile}\NormalTok{(Tstar,}\FloatTok{0.015}\NormalTok{)}
+\NormalTok{Tstar985}\OtherTok{=}\FunctionTok{quantile}\NormalTok{(Tstar,}\FloatTok{0.985}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+If we have a (small) sample from an unknown distribution and the
+distribution of X¯ is not close to normal, we cannot rely on the above
+(asympt.) normal CI. and we can use a bootstrap method.
+
+\textbf{Comparing t-test and bootstrap method:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{c}\NormalTok{(left, mean\_data, right) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  6.74 11.07 15.40
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{c}\NormalTok{(}\DecValTok{2}\SpecialCharTok{*}\NormalTok{mean\_data}\SpecialCharTok{{-}}\NormalTok{Tstar985,}\FunctionTok{mean}\NormalTok{(Tstar),}\DecValTok{2}\SpecialCharTok{*}\NormalTok{mean\_data}\SpecialCharTok{{-}}\NormalTok{Tstar15)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 98.5%        1.5% 
+##  6.84 11.09 14.92
+\end{verbatim}
+
+The bootstrap method has a smaller 97\%-confidence interval compared to
+the method were we use the normal distribution.
+
+\textbf{\emph{b)}} \textbf{T-test to verify the calim that the mean
+waiting time is less than 15 minutes}
+
+Assuming normality we can do the following t-test. We can state that
+there exists no significant departure from normality according to the
+Shapiro test from part (a).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mu0 }\OtherTok{=} \DecValTok{15}
+\FunctionTok{t.test}\NormalTok{(data,}\AttributeTok{mu=}\NormalTok{mu0,}\AttributeTok{alt=}\StringTok{"less"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## t = -2, df = 14, p-value = 0.03
+## alternative hypothesis: true mean is less than 15
+## 95 percent confidence interval:
+##  -Inf 14.6
+## sample estimates:
+## mean of x 
+##      11.1
+\end{verbatim}
+
+Since p-value \textless{} 0.05 we reject H0, which was that H0 is equal
+to or larger than 15, and therefore accept H1 (that mean \textless{}
+15). We can see that the 95\% confidence interval for the population
+mean is {[}-inf;14.59{]} which means that at a significance level alpha
+= 0.05 we reject null hypothesis as long as the hypothesized value mu0
+is below 14.59, otherwise the null hypothesis cannot be rejected.
+
+\textbf{Sign tests:}
+
+Binomial sign test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{larger\_than\_mu }\OtherTok{=} \FunctionTok{sum}\NormalTok{(data}\SpecialCharTok{\textgreater{}}\NormalTok{mu0)}
+\NormalTok{samples }\OtherTok{=} \FunctionTok{length}\NormalTok{(data)}
+\FunctionTok{binom.test}\NormalTok{(larger\_than\_mu,samples,}\AttributeTok{p=}\FloatTok{0.5}\NormalTok{, }\AttributeTok{alt=}\StringTok{\textquotesingle{}less\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## number of successes = 6, number of trials = 15, p-value = 0.3
+## alternative hypothesis: true probability of success is less than 0.5
+## 95 percent confidence interval:
+##  0.00 0.64
+## sample estimates:
+## probability of success 
+##                    0.4
+\end{verbatim}
+
+Since p-value \textgreater{} 0.05 we do not reject H0. We do not have
+sufficient evidence to say that the patients are less likely to wait
+less than 15 min than more than 15 min with the binomial sign test.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boxplot}\NormalTok{(data)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+While the histogram in a) does not seem symmetric, the above boxplot
+does. Also since a normal distribution is symmetric, which was found in
+a), the Wilcoxon signed rank test can be used. Although since the
+assumption of normality is not violated it makes more sense to use a
+parametric test.
+
+\textbf{\emph{c)}} \textbf{Computing the powers of the t-test and sign
+test from b) at \(\mu\) = 14 and \(\mu\) = 13:}
+
+Power test for sign test and t-test with mu0=14:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mu0\_1}\OtherTok{=} \DecValTok{13}
+\NormalTok{psign\_13}\OtherTok{=}\FunctionTok{numeric}\NormalTok{(B) }\DocumentationTok{\#\# will contain p{-}values of sign test}
+\NormalTok{pttest\_13}\OtherTok{=}\FunctionTok{numeric}\NormalTok{(B) }\DocumentationTok{\#\# will contain p{-}values of t{-}test}
+
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{B) \{}
+\NormalTok{   x}\OtherTok{=}\FunctionTok{sample}\NormalTok{(data,}\AttributeTok{replace=}\ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{   pttest\_13[i]}\OtherTok{=}\FunctionTok{t.test}\NormalTok{(x,}\AttributeTok{mu=}\NormalTok{mu0\_1,}\AttributeTok{alt=}\StringTok{"less"}\NormalTok{)[[}\DecValTok{3}\NormalTok{]] }\DocumentationTok{\#\# extract p{-}value}
+\NormalTok{   psign\_13[i]}\OtherTok{=}\FunctionTok{binom.test}\NormalTok{(}\FunctionTok{sum}\NormalTok{(x}\SpecialCharTok{\textgreater{}}\NormalTok{mu0),}\FunctionTok{length}\NormalTok{(data),}\AttributeTok{p=}\FloatTok{0.5}\NormalTok{, }\AttributeTok{alt=}\StringTok{"less"}\NormalTok{)[[}\DecValTok{3}\NormalTok{]]\} }\DocumentationTok{\#\# extract p{-}value}
+
+\CommentTok{\#percentage of t test/sign tests that are lower than 0.05. T tests have a lot}
+\CommentTok{\#larger percentage of tests that reject the H0.}
+\FunctionTok{sum}\NormalTok{(psign\_13}\SpecialCharTok{\textless{}}\FloatTok{0.05}\NormalTok{)}\SpecialCharTok{/}\NormalTok{B}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.094
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(pttest\_13}\SpecialCharTok{\textless{}}\FloatTok{0.05}\NormalTok{)}\SpecialCharTok{/}\NormalTok{B}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.259
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#power test for sign test and t{-}test with mu0=14}
+\NormalTok{mu0\_2 }\OtherTok{=} \DecValTok{14}
+\NormalTok{psign\_14}\OtherTok{=}\FunctionTok{numeric}\NormalTok{(B) }\DocumentationTok{\#\# will contain p{-}values of sign test}
+\NormalTok{pttest\_14}\OtherTok{=}\FunctionTok{numeric}\NormalTok{(B) }\DocumentationTok{\#\# will contain p{-}values of t{-}test}
+
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{B) \{}
+\NormalTok{  x}\OtherTok{=}\FunctionTok{sample}\NormalTok{(data,}\AttributeTok{replace=}\ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  pttest\_14[i]}\OtherTok{=}\FunctionTok{t.test}\NormalTok{(x,}\AttributeTok{mu=}\NormalTok{mu0\_2,}\AttributeTok{alt=}\StringTok{"less"}\NormalTok{)[[}\DecValTok{3}\NormalTok{]] }\DocumentationTok{\#\# extract p{-}value}
+\NormalTok{  psign\_14[i]}\OtherTok{=}\FunctionTok{binom.test}\NormalTok{(}\FunctionTok{sum}\NormalTok{(x}\SpecialCharTok{\textgreater{}}\NormalTok{mu0),}\FunctionTok{length}\NormalTok{(data),}\AttributeTok{p=}\FloatTok{0.5}\NormalTok{, }\AttributeTok{alt=}\StringTok{"less"}\NormalTok{)[[}\DecValTok{3}\NormalTok{]]\} }\DocumentationTok{\#\# extract p{-}value}
+
+\CommentTok{\#percentage of t test/sign tests that are lower than 0.05. T tests have a lot}
+\CommentTok{\#larger percentage of test than reject the H0.}
+\FunctionTok{sum}\NormalTok{(psign\_14}\SpecialCharTok{\textless{}}\FloatTok{0.05}\NormalTok{)}\SpecialCharTok{/}\NormalTok{B}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.109
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(pttest\_14}\SpecialCharTok{\textless{}}\FloatTok{0.05}\NormalTok{)}\SpecialCharTok{/}\NormalTok{B}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.423
+\end{verbatim}
+
+The t-test rejects the H0 more than the sign test for both \(\mu\) = 13
+and \(\mu\) = 14, which means that the wit the t-test the H1 is accepted
+more which was that mean \textless{} 15. What is also clearly seen for
+the t-test is the H1 is accepted more when \(\mu\) = 14 compared to
+\(\mu\) = 13. This is not the case for the sign test were H1 is accepted
+roughly the same amount.
+
+\textbf{\emph{d)}} \textbf{Recovering the whole confidence interval and
+its confidence level:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s }\OtherTok{=} \FunctionTok{sd}\NormalTok{(data)}
+\NormalTok{n }\OtherTok{=} \FunctionTok{length}\NormalTok{(data)}
+
+\CommentTok{\# z{-}score is probability}
+\NormalTok{pr }\OtherTok{=} \FloatTok{0.53} \CommentTok{\# right end confidence interval}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(data}\SpecialCharTok{\textgreater{}}\FloatTok{15.5}\NormalTok{)}\SpecialCharTok{/}\NormalTok{n }\CommentTok{\# sum of values \textgreater{} 15.5 / total}
+\NormalTok{m }\OtherTok{\textless{}{-}}\NormalTok{ pr}\SpecialCharTok{{-}}\NormalTok{x }\CommentTok{\# cause pr = x+m, m is error margin}
+\NormalTok{pl }\OtherTok{\textless{}{-}}\NormalTok{ x}\SpecialCharTok{{-}}\NormalTok{m }\CommentTok{\# left end confidence interval}
+\NormalTok{cv }\OtherTok{\textless{}{-}}\NormalTok{ (}\FunctionTok{sqrt}\NormalTok{(n)}\SpecialCharTok{*}\NormalTok{m)}\SpecialCharTok{/}\NormalTok{s }\CommentTok{\# cause m = cv*s/sqrt(n), is critical value}
+\NormalTok{area }\OtherTok{\textless{}{-}} \FloatTok{0.5398} \CommentTok{\# for cv 0.10 read from z{-}score table}
+\NormalTok{alpha }\OtherTok{\textless{}{-}}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{(area}\SpecialCharTok{/}\DecValTok{2}\NormalTok{)) }\CommentTok{\# don\textquotesingle{}t actually need alpha, cl is area/2}
+\NormalTok{cl }\OtherTok{\textless{}{-}}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{alpha)}\SpecialCharTok{*}\DecValTok{100} \CommentTok{\# confidence level}
+\FunctionTok{cbind}\NormalTok{(pl,pr,cl)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         pl   pr cl
+## [1,] 0.137 0.53 27
+\end{verbatim}
+
+Due to asymptotic normality the Z-score is used. Thus, the confidence
+interval is {[}0.137, 0.53{]} and its confidence level is 26.99\%.
+
+\textbf{\emph{e)}} \textbf{Verifying the claim that the waiting time is
+different for men and women using the Fisher exact test:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tab }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{6}\NormalTok{), }\AttributeTok{ncol=}\DecValTok{2}\NormalTok{, }\AttributeTok{byrow=}\ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{colnames}\NormalTok{(tab) }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}men\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}women\textquotesingle{}}\NormalTok{)}
+\FunctionTok{rownames}\NormalTok{(tab) }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}more than 15.5\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}less than 15.5\textquotesingle{}}\NormalTok{)}
+\NormalTok{tab }\OtherTok{\textless{}{-}} \FunctionTok{as.table}\NormalTok{(tab)}
+\NormalTok{tab}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                men women
+## more than 15.5   3     2
+## less than 15.5   4     6
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{fisher.test}\NormalTok{(tab)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## p-value = 0.6
+## alternative hypothesis: true odds ratio is not equal to 1
+## 95 percent confidence interval:
+##   0.16 37.20
+## sample estimates:
+## odds ratio 
+##       2.13
+\end{verbatim}
+
+Due to the small sample size Fisher's test is used. As the p-value
+0.6084 is greater than the .05 significance level, we do not reject the
+null hypothesis that the waiting time is below or above 15.5 min is
+independent of the fact that if you are a man or woman. So the claim of
+the researcher that the waiting time is different for men and women is
+not proven based on the Fisher's test.
+
+\hypertarget{exercise-2}{%
+\subsection{Exercise 2}\label{exercise-2}}
+
+\textbf{\emph{a)}} \textbf{Testing whether silver nitrate has an
+effect:} Plots:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qqnorm}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded);}\FunctionTok{hist}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded)}
+\FunctionTok{qqnorm}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{unseeded);}\FunctionTok{hist}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{unseeded)}
+\FunctionTok{boxplot}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded);}\FunctionTok{boxplot}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{unseeded)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+Normality test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 0.7, p-value = 1e-06
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{unseeded)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 0.6, p-value = 3e-07
+\end{verbatim}
+
+Plots show a very not normal data distribution which is confirmed with
+Shapiro's test. Box plots show the data consists of many outliers.
+
+The seeded and unseeded clouds data set is not paired data. In the
+experiment design it is described as out of a sample of 52 clouds 26 are
+chosen, this already implies the clouds are separate `individuals'. Not
+only that, clouds are unique and when it rains the cloud disappears (at
+least changes), which makes it impossible to use the same cloud twice.
+So we use an unpaired two samples t-test. Since we are investigating
+whether the rainfall increases with silver nitrate we test one sided.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{t.test}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded,clouds}\SpecialCharTok{$}\NormalTok{unseeded,}\AttributeTok{alternative =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## t = 2, df = 34, p-value = 0.03
+## alternative hypothesis: true difference in means is greater than 0
+\end{verbatim}
+
+Mann-Whitney test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{wilcox.test}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded,clouds}\SpecialCharTok{$}\NormalTok{unseeded,}\AttributeTok{alternative =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 473, p-value = 0.007
+## alternative hypothesis: true location shift is greater than 0
+\end{verbatim}
+
+Kolmogorov-Smirnov test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ks.test}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{unseeded,clouds}\SpecialCharTok{$}\NormalTok{seeded,}\AttributeTok{alternative =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## D^+ = 0.4, p-value = 0.01
+## alternative hypothesis: the CDF of x lies above that of y
+\end{verbatim}
+
+Are tests applicable? Mann-Whitney and Kolmogorov need the samples to be
+independent. Due to the unique nature of clouds and nothing in the
+experiment design suggests this assumption can't be withheld. T-test
+isn't applicable due to assumption of normality being violated.
+
+Non parametric tests are more significant due to outliers for which
+these tests aren't as sensitive for. Mann-Whitney is a rank test
+(median) and Kolmogorov checks the differences of the verticality of the
+histograms, since outliers are infrequent, verticality of histogram for
+the outlier is small.
+
+\textbf{\emph{b)}} \textbf{Repeat (a) with square root transformation:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sqrtseeded }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded); sqrtunseeded }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{unseeded)}
+\CommentTok{\# Plots:}
+\FunctionTok{qqnorm}\NormalTok{(sqrtseeded);}\FunctionTok{hist}\NormalTok{(sqrtseeded)}
+\FunctionTok{qqnorm}\NormalTok{(sqrtunseeded);}\FunctionTok{hist}\NormalTok{(sqrtunseeded)}
+\FunctionTok{boxplot}\NormalTok{(sqrtseeded);}\FunctionTok{boxplot}\NormalTok{(sqrtunseeded)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-25-1.pdf}
+
+Normality test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(sqrtseeded)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 0.9, p-value = 0.004
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(sqrtunseeded)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 0.8, p-value = 8e-04
+\end{verbatim}
+
+An improvement can be seen in the plots and Shapiro test. However the
+data still does not have a normal distribution and still consists of
+outliers.
+
+Two samples t-test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{t.test}\NormalTok{(sqrtseeded,sqrtunseeded,}\AttributeTok{alternative =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## t = 2, df = 43, p-value = 0.01
+## alternative hypothesis: true difference in means is greater than 0
+\end{verbatim}
+
+Mann-Whitney test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{wilcox.test}\NormalTok{(sqrtseeded,sqrtunseeded,}\AttributeTok{alternative =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 473, p-value = 0.007
+## alternative hypothesis: true location shift is greater than 0
+\end{verbatim}
+
+Kolmogorov-Smirnov test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ks.test}\NormalTok{(sqrtunseeded,sqrtseeded,}\AttributeTok{alternative =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## D^+ = 0.4, p-value = 0.01
+## alternative hypothesis: the CDF of x lies above that of y
+\end{verbatim}
+
+While the data set still contains outliers they are less large. T-test
+assumptions are still violated even though the resulting p-value is more
+significant. The transformation doesn't affect the significance of the
+ranked tests nor Kolmogorov Smirnoff test since the rank and frequency
+of the data points is still the same.
+
+\textbf{Repeat (a) with square root of square root transformation:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sqrtsqrtseeded }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(sqrtseeded); sqrtsqrtunseeded }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(sqrtunseeded)}
+\CommentTok{\# Plots:}
+\FunctionTok{qqnorm}\NormalTok{(sqrtsqrtseeded);}\FunctionTok{qqnorm}\NormalTok{(sqrtsqrtunseeded)}
+\FunctionTok{hist}\NormalTok{(sqrtsqrtseeded);}\FunctionTok{hist}\NormalTok{(sqrtsqrtunseeded)}
+\FunctionTok{boxplot}\NormalTok{(sqrtsqrtseeded);}\FunctionTok{boxplot}\NormalTok{(sqrtsqrtunseeded)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-31-1.pdf}
+Normality test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(sqrtsqrtseeded)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 1, p-value = 0.5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(sqrtsqrtunseeded)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 1, p-value = 0.3
+\end{verbatim}
+
+The data set is now normally distributed. Since the assumption of
+normality is not violated any more for the t-test, we also check to see
+if the variances are equal. To do this we use the F-test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{var.test}\NormalTok{(sqrtsqrtseeded, sqrtsqrtunseeded, }\AttributeTok{alternative =} \StringTok{"two.sided"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## F = 1, num df = 25, denom df = 25, p-value = 0.4
+## alternative hypothesis: true ratio of variances is not equal to 1
+\end{verbatim}
+
+The variance between groups is insignificant and can be considered
+equal.
+
+Two samples t-test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{t.test}\NormalTok{(sqrtsqrtseeded,sqrtsqrtunseeded, }\AttributeTok{var.equal =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{alternative =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## t = 3, df = 50, p-value = 0.006
+## alternative hypothesis: true difference in means is greater than 0
+\end{verbatim}
+
+Mann-Whitney test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{wilcox.test}\NormalTok{(sqrtsqrtseeded,sqrtsqrtunseeded,}\AttributeTok{alternative =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 473, p-value = 0.007
+## alternative hypothesis: true location shift is greater than 0
+\end{verbatim}
+
+Kolmogorov-Smirnov test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ks.test}\NormalTok{(sqrtsqrtunseeded,sqrtsqrtseeded,}\AttributeTok{alternative =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## D^+ = 0.4, p-value = 0.01
+## alternative hypothesis: the CDF of x lies above that of y
+\end{verbatim}
+
+Are tests now applicable with transformations? Mann-Whithey and
+Kolmogorov were applicable the whole time and now since only 1 outlier
+is left and the data is normal distributed the t-test assumptions are
+not violated. P-values are similar, all around 0,01.The t-test is
+slightly more significant, which is to be expected due the power of the
+t-test. With out the remaining outlier it would most likely be even more
+significant compared to the non parametric tests.
+
+\textbf{\emph{c)}} \textbf{Finding an estimate of \(\lambda\) and
+constructing a 95\%-CI for \(\lambda\):}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c1 }\OtherTok{\textless{}{-}}\NormalTok{ clouds}\SpecialCharTok{$}\NormalTok{seeded}
+\NormalTok{lambda\_est }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\FunctionTok{mean}\NormalTok{(c1)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded)}
+\NormalTok{sd }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\NormalTok{lambda\_est}
+\CommentTok{\# CI}
+\NormalTok{z }\OtherTok{\textless{}{-}} \FunctionTok{qnorm}\NormalTok{(}\DecValTok{1}\FloatTok{{-}0.025}\NormalTok{)}
+\NormalTok{CI\_L }\OtherTok{\textless{}{-}}\NormalTok{ (}\SpecialCharTok{{-}}\NormalTok{z}\SpecialCharTok{+}\FunctionTok{sqrt}\NormalTok{(n))}\SpecialCharTok{/}\NormalTok{(}\FunctionTok{mean}\NormalTok{(c1)}\SpecialCharTok{*}\FunctionTok{sqrt}\NormalTok{(n))}
+\NormalTok{CI\_R }\OtherTok{\textless{}{-}}\NormalTok{ (z}\SpecialCharTok{+}\FunctionTok{sqrt}\NormalTok{(n))}\SpecialCharTok{/}\NormalTok{(}\FunctionTok{mean}\NormalTok{(c1)}\SpecialCharTok{*}\FunctionTok{sqrt}\NormalTok{(n))}
+\FunctionTok{cbind}\NormalTok{(CI\_L,CI\_R)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         CI_L    CI_R
+## [1,] 0.00139 0.00313
+\end{verbatim}
+
+Estimate of lambda = 0.00226 CI around lambda: {[}0.00139,0.00313{]}
+
+\textbf{Bootstrap test:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t}\OtherTok{=}\FunctionTok{median}\NormalTok{(c1);t}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 222
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{B}\OtherTok{=}\DecValTok{1000}
+\NormalTok{tstar}\OtherTok{=}\FunctionTok{numeric}\NormalTok{(B)}
+\NormalTok{n}\OtherTok{=}\FunctionTok{length}\NormalTok{(c1)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{B)\{}
+\NormalTok{  xstar}\OtherTok{=}\FunctionTok{rexp}\NormalTok{(n,lambda\_est)}
+\NormalTok{  tstar[i]}\OtherTok{=}\FunctionTok{median}\NormalTok{(xstar)\}}
+\FunctionTok{hist}\NormalTok{(tstar,}\AttributeTok{prob=}\NormalTok{T)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-39-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pl}\OtherTok{=}\FunctionTok{sum}\NormalTok{(tstar}\SpecialCharTok{\textless{}}\NormalTok{t)}\SpecialCharTok{/}\NormalTok{B; pr}\OtherTok{=}\FunctionTok{sum}\NormalTok{(tstar}\SpecialCharTok{\textgreater{}}\NormalTok{t)}\SpecialCharTok{/}\NormalTok{B; p}\OtherTok{=}\DecValTok{2}\SpecialCharTok{*}\FunctionTok{min}\NormalTok{(pl,pr)}
+\FunctionTok{cbind}\NormalTok{(pl,pr,p)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        pl   pr    p
+## [1,] 0.13 0.87 0.26
+\end{verbatim}
+
+\textbf{Kolmogorov-Smirnov test:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ks.test}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded,}\StringTok{"pexp"}\NormalTok{, lambda\_est)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## D = 0.2, p-value = 0.2
+## alternative hypothesis: two-sided
+\end{verbatim}
+
+Testing whether the data follows an exp(lambda\_est) distribution: the
+H0 (that the data distribution is the same) cannot be rejected (both
+bootstrap test and Kolmogorov are insignificant). Thus we conclude that
+the distribution of the data follows a exp(lambda\_est) distribution.
+\textbf{\emph{d)}} \textbf{Verifying whether the median precipitation
+for seeded clouds is less than 300}
+
+In a) we showed that the cloud data is not symmetric nor normal
+distributed. So we use a sign test.
+
+Binomial test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded}\SpecialCharTok{\textless{}}\DecValTok{300}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded)}
+\FunctionTok{binom.test}\NormalTok{(x,n,}\AttributeTok{p=}\FloatTok{0.5}\NormalTok{,}\AttributeTok{alt=}\StringTok{\textquotesingle{}less\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## number of successes = 17, number of trials = 26, p-value = 1
+## alternative hypothesis: true probability of success is less than 0.5
+\end{verbatim}
+
+Not significant (P-value = 0.962) so h0 not rejected: which is medians
+are the same. Thus cannot conclude median precipitation is less than 300
+
+\textbf{Checking whether the fraction of the seeded clouds with
+precipitation less than 30 is at most 25\%:}
+
+Binomial test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(clouds}\SpecialCharTok{$}\NormalTok{seeded}\SpecialCharTok{\textless{}}\DecValTok{30}\NormalTok{)}
+\FunctionTok{binom.test}\NormalTok{(x,n,}\AttributeTok{p=}\FloatTok{0.25}\NormalTok{,}\AttributeTok{alt=}\StringTok{\textquotesingle{}less\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## number of successes = 3, number of trials = 26, p-value = 0.08
+## alternative hypothesis: true probability of success is less than 0.25
+\end{verbatim}
+
+Not significant (P-value = 0.0802) h0 not rejected: which is medians are
+the same. Thus cannot conclude the fraction of precipitation under 30 is
+at most 25\%.
+
+\hypertarget{exercise-3}{%
+\subsection{Exercise 3}\label{exercise-3}}
+
+\textbf{\emph{a)}} We cannot assume that the data was taken from normal
+populations because we have a very small sample size (only 10) and that
+is not enough to invoke the central limit theorem because we need a
+sample size of at least 30 to assume that. Furthermore, the distribution
+of the sample data is not normal as can be seen by the plot and
+normality test below.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qqnorm}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{isofluorane); }\FunctionTok{hist}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{isofluorane)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-44-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{isofluorane)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 0.8, p-value = 0.03
+\end{verbatim}
+
+\textbf{\emph{b)}} \textbf{Checking whether the columns isofluorane and
+halothane are correlated:}
+
+Using Spearman's rank correlation test because it does not assume
+normality.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cor.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{isofluorane, data}\SpecialCharTok{$}\NormalTok{halothane, }\AttributeTok{method =} \StringTok{"spearman"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## S = 129, p-value = 0.5
+## alternative hypothesis: true rho is not equal to 0
+\end{verbatim}
+
+p-value \textgreater{} 0.05 so the correlation is not significant.
+
+\textbf{Verifying whether the distributions of the isofluorane and
+halothane columns are different:}
+
+The permutation test is applicable here because it doesn't assume
+normality and the sample size is small.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mystat}\OtherTok{=}\ControlFlowTok{function}\NormalTok{(x,y) \{}\FunctionTok{mean}\NormalTok{(x}\SpecialCharTok{{-}}\NormalTok{y)\}}
+\NormalTok{B}\OtherTok{=}\DecValTok{1000}\NormalTok{; tstar}\OtherTok{=}\FunctionTok{numeric}\NormalTok{(B)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{B) \{}
+\NormalTok{  datastar}\OtherTok{=}\FunctionTok{t}\NormalTok{(}\FunctionTok{apply}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(data[,}\DecValTok{1}\NormalTok{],data[,}\DecValTok{2}\NormalTok{]),}\DecValTok{1}\NormalTok{,sample))}
+\NormalTok{  tstar[i]}\OtherTok{=}\FunctionTok{mystat}\NormalTok{(datastar[,}\DecValTok{1}\NormalTok{],datastar[,}\DecValTok{2}\NormalTok{]) \}}
+\NormalTok{myt}\OtherTok{=}\FunctionTok{mystat}\NormalTok{(data[,}\DecValTok{1}\NormalTok{],data[,}\DecValTok{2}\NormalTok{])}
+\NormalTok{myt}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -0.035
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(tstar)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-47-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pl}\OtherTok{=}\FunctionTok{sum}\NormalTok{(tstar}\SpecialCharTok{\textless{}}\NormalTok{myt)}\SpecialCharTok{/}\NormalTok{B}
+\NormalTok{pr}\OtherTok{=}\FunctionTok{sum}\NormalTok{(tstar}\SpecialCharTok{\textgreater{}}\NormalTok{myt)}\SpecialCharTok{/}\NormalTok{B}
+\NormalTok{p}\OtherTok{=}\DecValTok{2}\SpecialCharTok{*}\FunctionTok{min}\NormalTok{(pl,pr)}
+\NormalTok{p}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.716
+\end{verbatim}
+
+p-value \textgreater{} 0.05 so no significant difference in the
+distributions of the isofluorane and halothane columns.
+
+\textbf{\emph{c)}} \textbf{One-way ANOVA test:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataframe}\OtherTok{=}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{concentration=}\FunctionTok{as.vector}\NormalTok{(}\FunctionTok{as.matrix}\NormalTok{(data)),}
+                     \AttributeTok{variety=}\FunctionTok{factor}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{,}\AttributeTok{each=}\DecValTok{10}\NormalTok{)))}
+\NormalTok{aov}\OtherTok{=}\FunctionTok{lm}\NormalTok{(concentration}\SpecialCharTok{\textasciitilde{}}\NormalTok{variety,}\AttributeTok{data=}\NormalTok{dataframe)}
+\FunctionTok{anova}\NormalTok{(aov)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           Df Sum Sq Mean Sq F value Pr(>F)  
+## variety    2   1.08   0.540    5.35  0.011 *
+\end{verbatim}
+
+P-value \textless{} 0.05 so factor variety is significant. So yes, the
+type of drug has an effect on the concentration of plasma epinephrine.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(aov)); }\FunctionTok{qqline}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(aov))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(aov),}\FunctionTok{residuals}\NormalTok{(aov))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-49-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{leveneTest}\NormalTok{(concentration}\SpecialCharTok{\textasciitilde{}}\NormalTok{variety,}\AttributeTok{data=}\NormalTok{dataframe)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Levene's Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(>F)   
+## group  2    5.67 0.0088 **
+##       27                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+The plot of the residuals shows the assumption of normailty can
+withhold, however the spread in the residuals suggest that there is no
+equal variance in the residuals. To confirm this a Levenes test was
+performed (P \textless{} 0.05). Thus the equal variances assumption of
+the one-way ANOVA test is not met.
+
+\textbf{The estimated concentrations for each of the three anesthesia
+drugs:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(aov)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)    0.434      0.101    4.32  0.00019 ***
+## variety2       0.035      0.142    0.25  0.80727    
+## variety3       0.419      0.142    2.95  0.00650 ** 
+\end{verbatim}
+
+The estimated concentrations are 0.43 for isofluorane, 0.04 for
+halothane, and 0.42 for cyclopropane. It's worth noting that the p-value
+for halothane is the only one greater than 0.05.
+
+\textbf{\emph{d)}} \textbf{Kruskal-Wallis test:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{attach}\NormalTok{(dataframe); }\FunctionTok{kruskal.test}\NormalTok{(concentration,variety)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Kruskal-Wallis chi-squared = 6, df = 2, p-value = 0.06
+\end{verbatim}
+
+p-value \textgreater{} 0.05 so factor variety is not significant. So no,
+the two tests don't arrive at the same conclusion. While the one-way
+ANOVA test has more power than the Kruskal-Wallis test, it is less
+accurate in this situation because the assumption of equal variances is
+not met. The nonparametric Kruskal-Wallis test has less strict
+assumptions which are met and is thus more accurate.
+
+\hypertarget{exercise-4}{%
+\subsection{Exercise 4}\label{exercise-4}}
+
+\textbf{\emph{a)}} \textbf{Randomization process to distribute 80
+fishes:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{I}\OtherTok{=}\DecValTok{4}\NormalTok{; J}\OtherTok{=}\DecValTok{2}\NormalTok{; N}\OtherTok{=}\DecValTok{10}
+\FunctionTok{rbind}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{I,}\AttributeTok{each=}\NormalTok{N}\SpecialCharTok{*}\NormalTok{J),}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{J,N}\SpecialCharTok{*}\NormalTok{I),}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(N}\SpecialCharTok{*}\NormalTok{I}\SpecialCharTok{*}\NormalTok{J)))}
+\end{Highlighting}
+\end{Shaded}
+
+4 rate factors 2 method factors and each specific combination is
+repeated for 10 fishes. With this code the 80 fishes are distributed
+randomly over all combinations of levels of factors rate and method.
+
+\textbf{\emph{b)}} \textbf{Two-way ANOVA test:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#necessary other wise rate is numerical and should be categorical}
+\NormalTok{data}\SpecialCharTok{$}\NormalTok{rate}\OtherTok{=}\FunctionTok{as.factor}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{rate)}
+\FunctionTok{boxplot}\NormalTok{(hemoglobin }\SpecialCharTok{\textasciitilde{}}\NormalTok{ method, }\AttributeTok{data =}\NormalTok{ data) ; }
+\FunctionTok{boxplot}\NormalTok{(hemoglobin }\SpecialCharTok{\textasciitilde{}}\NormalTok{ rate, }\AttributeTok{data =}\NormalTok{ data)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-54-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{interaction.plot}\NormalTok{(}\AttributeTok{x.factor =}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{rate, }\AttributeTok{trace.factor =}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{method, }\AttributeTok{response =}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{hemoglobin);}
+\FunctionTok{interaction.plot}\NormalTok{(}\AttributeTok{x.factor =}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{method, }\AttributeTok{trace.factor =}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{rate, }\AttributeTok{response =}\NormalTok{ data}\SpecialCharTok{$}\NormalTok{hemoglobin)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-55-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hemoglobinaov}\OtherTok{=}\FunctionTok{lm}\NormalTok{(hemoglobin }\SpecialCharTok{\textasciitilde{}}\NormalTok{ method }\SpecialCharTok{*}\NormalTok{ rate, }\AttributeTok{data =}\NormalTok{ data) }
+\FunctionTok{anova}\NormalTok{(hemoglobinaov)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Df Sum Sq Mean Sq F value  Pr(>F)    
+## method       1    2.4    2.42    1.56    0.22    
+## rate         3   90.6   30.19   19.47 2.4e-09 ***
+## method:rate  3    4.9    1.62    1.05    0.38    
+\end{verbatim}
+
+The p-value for the interaction between method and the rate is larger
+than 0.05. So, there is no evidence for interaction between the two
+factors. Therefore we will create a new model without the interaction
+called the additive model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hemoglobinaov2 }\OtherTok{=}\FunctionTok{lm}\NormalTok{(hemoglobin }\SpecialCharTok{\textasciitilde{}}\NormalTok{ method }\SpecialCharTok{+}\NormalTok{ rate, }\AttributeTok{data =}\NormalTok{ data)}
+\FunctionTok{anova}\NormalTok{(hemoglobinaov2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           Df Sum Sq Mean Sq F value Pr(>F)    
+## method     1    2.4    2.42    1.55   0.22    
+## rate       3   90.6   30.19   19.43  2e-09 ***
+\end{verbatim}
+
+With the two way anova additive model we can see that the method factor
+had a p-value \textgreater{} 0.05 and therefore has no main effect for
+the outcome of this research. The rate factor has a p-value \textless{}
+0.05 which means that the effect of different amounts of sulfamerazine
+that is given to the brown trout gives significantly different amounts
+of hemoglobin in their blood.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(hemoglobinaov2))}
+\FunctionTok{qqline}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(hemoglobinaov2))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(hemoglobinaov2),}\FunctionTok{residuals}\NormalTok{(hemoglobinaov2))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-58-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hemoglobinaov2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = hemoglobin ~ method + rate, data = data)
+## 
+## Coefficients:
+## (Intercept)      methodB        rate2        rate3        rate4  
+##       6.801        0.348        2.760        2.405        1.880
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(hemoglobinaov2))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## W = 1, p-value = 0.3
+\end{verbatim}
+
+QQ plot looks like the residuals are normally distributed. For the
+Shapiro's test the p-value \textgreater{} 0.05, therefore passed the
+test and can state that there exists no significant departure from
+normality. The spread in the residuals seems to be in the similar range
+for all the fitted values. So, we can assume equal variance in the
+residuals. Because the requirements of normality and the assumption of
+equal variances are met, we can use the two-way ANOVA test.
+
+\textbf{\emph{c)}} \textbf{Factor with greater influence:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{group\_by}\NormalTok{(data, method, rate) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{count =} \FunctionTok{n}\NormalTok{(),}
+    \AttributeTok{mean =} \FunctionTok{mean}\NormalTok{(hemoglobin, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{sd =} \FunctionTok{sd}\NormalTok{(hemoglobin, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   <chr>  <fct> <int> <dbl> <dbl>
+## 1 A      1        10  7.2  1.02 
+## 2 A      2        10  9.33 1.72 
+## 3 A      3        10  9.03 1.14 
+## 4 A      4        10  8.69 1.00 
+## 5 B      1        10  6.75 0.707
+## 6 B      2        10 10.1  0.887
+## 7 B      3        10  9.73 1.56 
+## 8 B      4        10  9.02 1.55
+\end{verbatim}
+
+The rate factor has a significant main effect on the the amount of
+hemoglobin, while the method factor does not have a significant main
+effect on the amount of hemoglobin. So the rate factor has the greatest
+influence of the two. This is a good question, because one factor is
+significant and the other is not if both were insignificant than it
+would not be a good question.
+
+\textbf{Combination of rate and method that yields the highest
+hemoglobin:} Rate 2 and method B leads to a mean of 10.1, which is the
+highest hemoglobin yield when both factors are considered. When rate 3
+and method A was used then the mean was estimated to be 9.03.
+
+\textbf{Rate that leads to the highest mean hemoglobin:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{group\_by}\NormalTok{(data, rate) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{count =} \FunctionTok{n}\NormalTok{(),}
+    \AttributeTok{mean =} \FunctionTok{mean}\NormalTok{(hemoglobin, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{sd =} \FunctionTok{sd}\NormalTok{(hemoglobin, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   <fct> <int> <dbl> <dbl>
+## 1 1        20  6.98 0.884
+## 2 2        20  9.74 1.39 
+## 3 3        20  9.38 1.38 
+## 4 4        20  8.86 1.28
+\end{verbatim}
+
+When only the factor rate is considered then rate 2 gives the highest
+mean rate with a mean of 9.74 hemoglobin yield.
+
+\textbf{\emph{d)}} \textbf{One-way ANOVA test:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hemoglobinaov3 }\OtherTok{=}\FunctionTok{lm}\NormalTok{(hemoglobin }\SpecialCharTok{\textasciitilde{}}\NormalTok{ rate, }\AttributeTok{data =}\NormalTok{ data)}
+\FunctionTok{anova}\NormalTok{(hemoglobinaov3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           Df Sum Sq Mean Sq F value  Pr(>F)    
+## rate       3   90.6   30.19    19.3 2.1e-09 ***
+## Residuals 76  118.9    1.56                    
+\end{verbatim}
+
+With the one-way anova we see that the p-value \textless{} 0.05 and
+therefore the rate factor gives significant different means for the
+hemoglobin. We can use the one-way anova test on this data set because
+the factor method is insignificant and the interaction between the rate
+factor and the method factor is also insignificant.
+
+\hypertarget{exercise-5}{%
+\subsection{Exercise 5}\label{exercise-5}}
+
+\textbf{\emph{a)}} \textbf{Repeated Anova without interactions:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cream}\SpecialCharTok{$}\NormalTok{batch }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(cream}\SpecialCharTok{$}\NormalTok{batch)}
+\NormalTok{cream}\SpecialCharTok{$}\NormalTok{position }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(cream}\SpecialCharTok{$}\NormalTok{position)}
+\NormalTok{cream}\SpecialCharTok{$}\NormalTok{starter }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(cream}\SpecialCharTok{$}\NormalTok{starter)}
+\NormalTok{aovcream }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(acidity}\SpecialCharTok{\textasciitilde{}}\NormalTok{batch}\SpecialCharTok{+}\NormalTok{position}\SpecialCharTok{+}\NormalTok{starter,}\AttributeTok{data=}\NormalTok{cream); }\FunctionTok{anova}\NormalTok{(aovcream)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           Df Sum Sq Mean Sq F value  Pr(>F)    
+## batch      4   18.8    4.69    8.60  0.0016 ** 
+## position   4    2.3    0.59    1.08  0.4112    
+## starter    4   44.1   11.03   20.21 2.9e-05 ***
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(aovcream)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)    8.662      0.533   16.26  1.5e-09 ***
+## batch2        -1.348      0.467   -2.88    0.014 *  
+## batch3         0.276      0.467    0.59    0.566    
+## batch4         1.368      0.467    2.93    0.013 *  
+## batch5         0.200      0.467    0.43    0.676    
+## position2     -0.618      0.467   -1.32    0.211    
+## position3     -0.038      0.467   -0.08    0.937    
+## position4     -0.764      0.467   -1.63    0.128    
+## position5     -0.264      0.467   -0.56    0.583    
+## starter2      -0.150      0.467   -0.32    0.754    
+## starter3      -0.980      0.467   -2.10    0.058 .  
+## starter4       2.810      0.467    6.01  6.1e-05 ***
+## starter5      -0.484      0.467   -1.04    0.321    
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(aovcream));}\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(aovcream),}\FunctionTok{residuals}\NormalTok{(aovcream))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment1_report_files/figure-latex/unnamed-chunk-66-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(aovcream))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  residuals(aovcream)
+## W = 1, p-value = 1
+\end{verbatim}
+
+Three factors are relevant to look at so a three way Anova is used.
+Since the same starter combination is being tested multiple times in
+different locations a repeated measures test is used. So the test used
+is a three way repeated measure Anova. Position no significant effect (P
+= 0.411). However batch does have significant effect (P =0.00163) (not
+expected in experiment design) and starter also has a significant effect
+(P = 2.904e-05). From summary: p value starter2 not significant (p =
+0.754), this is compared to starter1. Thus starter 1 and 2 do not
+significantly differ. The plots and normality tests show the assumption
+of normality is not violated and looking at the residuals plot the
+assumption of homogeneity of variances is also not violated. So the
+chosen Anova test is applicable.
+
+\textbf{\emph{b)}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aovcream}\OtherTok{=}\FunctionTok{lm}\NormalTok{(acidity}\SpecialCharTok{\textasciitilde{}}\NormalTok{batch}\SpecialCharTok{+}\NormalTok{starter,}\AttributeTok{data=}\NormalTok{cream); }\FunctionTok{anova}\NormalTok{(aovcream)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           Df Sum Sq Mean Sq F value  Pr(>F)    
+## batch      4   18.8    4.69    8.44 0.00073 ***
+## starter    4   44.1   11.03   19.84 4.8e-06 ***
+## Residuals 16    8.9    0.56                    
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(aovcream)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)    8.325      0.447   18.60  2.9e-12 ***
+## batch2        -1.348      0.472   -2.86    0.011 *  
+## batch3         0.276      0.472    0.59    0.567    
+## batch4         1.368      0.472    2.90    0.010 *  
+## batch5         0.200      0.472    0.42    0.677    
+## starter2      -0.150      0.472   -0.32    0.755    
+## starter3      -0.980      0.472   -2.08    0.054 .  
+## starter4       2.810      0.472    5.96  2.0e-05 ***
+## starter5      -0.484      0.472   -1.03    0.320    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.746 on 16 degrees of freedom
+## Multiple R-squared:  0.876,  Adjusted R-squared:  0.814 
+## F-statistic: 14.1 on 8 and 16 DF,  p-value: 6.47e-06
+\end{verbatim}
+
+Batch is not an insignificant block variable (P = 0.000735), even though
+in the experiment design the batch was meant to be identical. However
+the position has no influence so can be considered an insignificant
+block element (P = 4.816e-06) and be removed. The now two-way repeated
+measures Anova: Out of all the starters, only starter 4 is significant
+(P = 6.10e-05)
+
+\textbf{\emph{c)}} \textbf{Friedman}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{friedman.test}\NormalTok{(acidity}\SpecialCharTok{\textasciitilde{}}\NormalTok{batch }\SpecialCharTok{|}\NormalTok{ starter,}\AttributeTok{data=}\NormalTok{cream)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Friedman chi-squared = 13, df = 4, p-value = 0.01
+\end{verbatim}
+
+Friedman test is a non parametric version of the repeated measures
+Anova. Since the the assumptions for the repeated measure Anova are met,
+it makes more sense to use that test, no assumptions for Friedman's test
+(data is independent and data can be ranked) are violated. so it is
+possible to use it with acidity as response values, starter as the group
+and batch as block variables. However to see which starter of the
+starters causes the significant effect, a post hoc test would need to be
+applied.
+
+\textbf{\emph{d)}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{creamlmer}\OtherTok{=}\FunctionTok{lmer}\NormalTok{(acidity}\SpecialCharTok{\textasciitilde{}}\NormalTok{starter}\SpecialCharTok{+}\NormalTok{(}\DecValTok{1}\SpecialCharTok{|}\NormalTok{batch),}\AttributeTok{REML=}\ConstantTok{FALSE}\NormalTok{,}\AttributeTok{data=}\NormalTok{cream)}
+\FunctionTok{summary}\NormalTok{(creamlmer)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  batch    (Intercept) 0.662    0.814   
+##  Residual             0.445    0.667   
+## Number of obs: 25, groups:  batch, 5
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept)    8.424      0.471   17.90
+## starter2      -0.150      0.422   -0.36
+## starter3      -0.980      0.422   -2.32
+## starter4       2.810      0.422    6.66
+## starter5      -0.484      0.422   -1.15
+## 
+## Correlation of Fixed Effects:
+##          (Intr) strtr2 strtr3 strtr4
+## starter2 -0.448                     
+## starter3 -0.448  0.500              
+## starter4 -0.448  0.500  0.500       
+## starter5 -0.448  0.500  0.500  0.500
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{creamlmer1}\OtherTok{=}\FunctionTok{lmer}\NormalTok{(acidity}\SpecialCharTok{\textasciitilde{}}\NormalTok{(}\DecValTok{1}\SpecialCharTok{|}\NormalTok{batch),}\AttributeTok{data=}\NormalTok{cream,}\AttributeTok{REML=}\ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{anova}\NormalTok{(creamlmer,creamlmer1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            npar   AIC   BIC logLik deviance Chisq Df Pr(>Chisq)    
+## creamlmer1    3 103.1 106.7  -48.5     97.1                        
+## creamlmer     7  75.4  83.9  -30.7     61.4  35.7  4    3.3e-07 ***
+\end{verbatim}
+
+Using the same model as in b, however now the block model batch is
+modeled with a random effect. Since lmer doesn't give p-values, it is
+compared to the same model without starters. The variance between these
+models gives us the significance of the starter factor. Comparing the
+model with random effects with the fixed effect model in b), Starter 4
+has the most significant effect on acidity in both models and slightly
+larger t-value in lmer (T = 6.660) compared to the fixed effect model in
+b) (T = 5.957). Furthermore the estimates are slightly larger in the
+random effects model. So similar results are found, except for the
+difference that no estimates were given for the batch variable, since
+this was modeled as a random effect. Since in the experimental design
+the batch was not meant to have an effect, we argue that modelling the
+batch as a random block variable is an improvement.
+
+\end{document}
