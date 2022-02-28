@@ -365,7 +365,7 @@ cbind(pl,pr,p)
 ```{r, output.lines=-(1:4), warning=FALSE}
 ks.test(clouds$seeded,"pexp", lambda_est)
 ```
-Testing whether the data follows an exp(lambda_est) distribution: the H0 (that the data distribution is the same) cannot be rejected (both bootstrap test and Kolmogorov are insignificant). Thus we conclude that the distribution of the data follows a exp(lambda_est) distribution.
+For the bootstrap the test statistic median is used. The median of our sample is 222 and as can be seen in the histogram differs from the median of the simulated data. To test whether the data follows an exp(lambda_est) distribution is significantly different: the H0 (that the data distribution is the same) cannot be rejected (both bootstrap test and Kolmogorov are insignificant). Thus we conclude that the distribution of the data follows a exp(lambda_est) distribution.
 ***d)***
 **Verifying whether the median precipitation for seeded clouds is less than 300**
 
@@ -508,7 +508,7 @@ anova(hemoglobinaov)
 ```
 The p-value for the interaction between method and the rate is larger than 0.05. So, there is no evidence for interaction between the two factors. Therefore we will create a new model without the interaction called the additive model.
 
-```{r, output.lines=4:6}
+```{r, output.lines=5:6}
 hemoglobinaov2 =lm(hemoglobin ~ method + rate, data = data)
 anova(hemoglobinaov2)
 ```
