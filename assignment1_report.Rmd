@@ -111,7 +111,7 @@ c(2*mean_data-Tstar985,mean(Tstar),2*mean_data-Tstar15)
 The bootstrap method has a smaller 97%-confidence interval compared to the method were we use the normal distribution.
 
 ***b)***
-**T-test to verify the calim that the mean waiting time is less than 15 minutes**
+**T-test to verify the claim that the mean waiting time is less than 15 minutes**
 
 Assuming normality we can do the following t-test. We can state that there exists no significant departure from normality according to the Shapiro test from part (a).
 ```{r, output.lines=-(1:4)}
@@ -172,7 +172,9 @@ for(i in 1:B) {
 sum(psign_14<0.05)/B
 sum(pttest_14<0.05)/B
 ```
-The t-test rejects the H0 more than the sign test for both $\mu$ = 13 and $\mu$ = 14, which means that the wit the t-test the H1 is accepted more which was that mean < 15. What is also clearly seen for the t-test is the H1 is accepted more when $\mu$ = 14 compared to $\mu$ = 13. This is not the case for the sign test were H1 is accepted roughly the same amount.
+T test rejects the H0 more than the sign test for both mu0=13 and mu0=14
+which means that with the t-test the H1 is accepted more which was that 
+mean<13 or 14. What is also clearly seen for the t-test is the H1 is accepted more when $\mu$ = 14 compared to $\mu$ = 13. This is not the case for the sign test were H1 is accepted roughly the same amount.
 
 ***d)***
 **Recovering the whole confidence interval and its confidence level:**
@@ -453,7 +455,7 @@ par(mfrow=c(1,2))
 qqnorm(residuals(aov)); qqline(residuals(aov))
 plot(fitted(aov),residuals(aov), main = "Residual Plot")
 ```
-```{r, output.lines=-(1:4)}
+```{r, output.lines=(1:4)}
 leveneTest(concentration~variety,data=dataframe)
 ```
 The plot of the residuals shows the assumption of normailty can withhold, however the spread in the residuals suggest that there is no equal variance in the residuals. To confirm this a Levenes test was performed (P < 0.05). Thus the equal variances assumption of the one-way ANOVA test is not met.
@@ -497,10 +499,12 @@ boxplot(hemoglobin ~ rate, data = data,main = "Boxplot")
 ```
 ```{r, echo=-1, fig.height=3}
 par(mfrow=c(1,2))
-interaction.plot(x.factor = data$rate, trace.factor = data$method, response = data$hemoglobin, main="Interaction Plot",
+interaction.plot(x.factor = data$rate, trace.factor = data$method, 
+        response = data$hemoglobin, main="Interaction Plot",
         xlab="rate",
         ylab="hemoglobin",trace.label = "method:");
-interaction.plot(x.factor = data$method, trace.factor = data$rate, response = data$hemoglobin, main="Interaction Plot",
+interaction.plot(x.factor = data$method, trace.factor = data$rate, 
+        response = data$hemoglobin, main="Interaction Plot",
         xlab="method",
         ylab="hemoglobin",trace.label = "rate:")
 ```
@@ -528,7 +532,10 @@ hemoglobinaov2
 ```{r, output.lines=-(1:4)}
 shapiro.test(residuals(hemoglobinaov2))
 ```
-QQ plot looks like the residuals are normally distributed. For the Shapiro's test the p-value > 0.05, therefore passed the test and can state that there exists no significant departure from normality. The spread in the residuals seems to be in the similar range for all the fitted values. So, we can assume equal variance in the residuals. Because the requirements of normality and the assumption of equal variances are met, we can use the two-way ANOVA test.
+```{r, output.lines=(1:6)}
+leveneTest(hemoglobin ~ method * rate, data = data)
+```
+QQ plot looks like the residuals are normally distributed. For the Shapiro's test the p-value > 0.05, therefore passed the test and can state that there exists no significant departure from normality. The spread in the residuals seems to be in the similar range for all the fitted values, this is confirmed with the Levene's test (p > 0.05). So, we can assume equal variance in the residuals. Because the requirements of normality and the assumption of equal variances are met, we can use the two-way ANOVA test.
 
 
 ***c)***
@@ -583,12 +590,12 @@ summary(aovcream)
 ```
 ```{r echo=-1, fig.height=3}
 par(mfrow=c(1,2))
-qqnorm(residuals(aovcream));qqline(residuals(aovcream));plot(fitted(aovcream),residuals(aovcream),main="Residual Plot")
+qqnorm(residuals(aovcream));qqline(residuals(aovcream));
+plot(fitted(aovcream),residuals(aovcream),main="Residual Plot")
 ```
 ```{r, output.lines=-(1:4)}
 shapiro.test(residuals(aovcream));
 ```
-
 Three factors are relevant to look at so a three way Anova is used. Since the same starter combination is being tested multiple times in different locations a repeated measures test is used. So the test used is a three way repeated measure Anova.
 Position no significant effect (P = 0.411). However batch does have significant effect (P =0.00163) (not expected in experiment design) and starter also has a significant effect (P = 2.904e-05). 
 From summary: p value starter2 not significant (p = 0.754), this is compared to starter1. Thus starter 1 and 2 do not significantly differ.
@@ -596,6 +603,7 @@ The plots and normality tests show the assumption of normality is not violated a
 
 
 ***b)***
+**Removed insignificant block variables**
 ```{r, output.lines=4:7}
 aovcream=lm(acidity~batch+starter,data=cream); anova(aovcream)
 ```
@@ -613,6 +621,7 @@ friedman.test(acidity~batch | starter,data=cream)
 Friedman test is a non parametric version of the repeated measures Anova. Since the the assumptions for the repeated measure Anova are met, it makes more sense to use that test, no assumptions for Friedman's test (data is independent and data can be ranked) are violated. so it is possible to use it with acidity as response values, starter as the group and batch as block variables. However to see which starter of the starters causes the significant effect, a post hoc test would need to be applied. 
 
 ***d)***
+**Model with random effects**
 ```{r, output.lines=(12:24)}
 creamlmer=lmer(acidity~starter+(1|batch),REML=FALSE,data=cream)
 summary(creamlmer)
