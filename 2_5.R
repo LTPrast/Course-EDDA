@@ -1,5 +1,4 @@
 #5a
-
 data = read.table("awards.txt", header=TRUE)
 head(data)
 
@@ -32,7 +31,7 @@ coef_awards_gen; coef_awards_aca; coef_awards_voc
 
 ####without mode####
 #Also possible to estimate without the model does give the same answer
-# number of awards per programm, but does not use model
+# number of awards per programm
 awards_prog =xtabs(data[1:2])
 awards_prog[1]; awards_prog[2]; awards_prog[3]
 
@@ -41,7 +40,14 @@ awards_prog[1]/persons_1; awards_prog[2]/persons_2; awards_prog[3]/persons_3
 ####without model####
 
 #5b
+#For the situation in a), can the Kruskall-Wallis test also be used? If yes, 
+#apply the test and comment on the results; of no, explain why this test cannot be used.
 
+#When we exclude the math variable we get the following table where we compare
+#the number of awards to the enrolment of the student.
+table(data[1:2])
+#The assumption of the kruskal-wallis is all ni > 5. Since this is not true
+#for this dataset/table we can not use the Kruskall-wallis
 
 #5c
 #Now include predictor math into analysis and investigate the influence of the 
