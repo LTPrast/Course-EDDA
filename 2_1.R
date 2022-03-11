@@ -23,9 +23,9 @@ no_nausea_data = data$Incidence.of.no.nausea
 nausea_data = data$Incidence.of.Nausea
 
 a = as.logical(rep(1, times = nausea_data[1]))
-b = as.logical(rep(0, times = no_nausea[1]))
+b = as.logical(rep(0, times = no_nausea_data[1]))
 a2 = as.logical(rep(1, times = nausea_data[2]))
-b2 = as.logical(rep(0, times = no_nausea[2]))
+b2 = as.logical(rep(0, times = no_nausea_data[2]))
 a3 = as.logical(rep(1, times = nausea_data[3]))
 b3 = as.logical(rep(0, times = no_nausea_data[3]))
 nausea = c(a,b,a2,b2,a3,b3)
