@@ -9,7 +9,7 @@ output:
 highlight: tango
 ---
 ```{r include = FALSE}
-options(digits=3)
+options(digits=5)
 options(knitr.duplicate.label = "allow")
 ```
 
@@ -73,6 +73,11 @@ p-value < 0.05 so there is significant differences between the activity groups, 
 summary(aov)
 ```
 The high activity group has an estimated 3.60 longevity, while the isolated activity group has 0.52, and the low activity group has 0.40. This indicates that the higher the activity, the longer the longevity is.
+```{r}
+high <- 3.6021;high
+isolated <- high+0.5172;isolated
+low <- high+0.3977;low
+```
 
 ### b)
 
@@ -181,6 +186,14 @@ par(mfrow=c(2,1))
 hist(fruitflies$loglongevity)
 hist(fruitflies$longevity)
 ```
-
+```{r}
+par(mfrow=c(1,2))
+fruitflies1=lm(longevity~thorax+activity,data=fruitflies)
+plot(fitted(fruitflies1),residuals(fruitflies1))
+fruitflieslog=lm(loglongevity~thorax+activity,data=fruitflies)
+plot(fitted(fruitflieslog),residuals(fruitflieslog))
+```
 The histograms and the Shapiro tests confirm that longevity is more normal than loglongevity, and since the ANCOVA analysis relies on normality, it was not wise to use the logarithm as response.
+
+However the fitted residuals plots show the loglongevity have a beter spread, more homogeneity than the longevity plot
 

@@ -9,7 +9,7 @@ output:
 highlight: tango
 ---
 ```{r include = FALSE}
-options(digits=3)
+options(digits=5)
 options(knitr.duplicate.label = "allow")
 ```
 
@@ -100,6 +100,11 @@ Estimated probability that student passes with gpa=3 and doesn't receive psi
 = 2.9e-12 
 
 Comment: a student with 3.03 gpa who receives psi will almost certainly pass while the one who doesn't will almost certainly fail.
+
+```{r}
+exp(2.338) # from group chat unsure if correct
+exp(-2.338) # if these values are an answer, could be correct
+```
 
 ### c)
 
