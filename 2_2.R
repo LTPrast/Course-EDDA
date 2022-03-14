@@ -20,7 +20,7 @@ round(cooks.distance(airpollutionlm),2)
 plot(1:30,cooks.distance(airpollutionlm),type="b")
 # if model parameters change drastically with/without point it is considered and 
 # influence point: if close to or larger than 1 it's an influence point. In our
-# case largest point is 0.8 so is good?
+# case largest point is 0.8 so is good
 
 # problem of collinearity: problem of linear relations between explanatory 
 # variables. A straight line in a scatter plot of two variables means they 
@@ -29,11 +29,17 @@ plot(1:30,cooks.distance(airpollutionlm),type="b")
 round(cor(airpollution),2)
 pairs(airpollution)
 # some explanatory variables possible could be colinear -> straight line
-# in scatter plot, however non a very correlated
+# in scatter plot, however none are very correlated
 # variance inflation factors (larger than 5 is concern)
 library(car); vif(airpollutionlm)
 # since values all look alright no need to worry about colinearty. If the values
 # would be above 5, than remove a explanatory variable and compare again etc
+
+# outliers (question didnt ask to investigate outliers):
+orderedair <- order(abs(residuals(airpollutionlm)))
+u11=rep(0,length(orderedair)); u11[11]=1; u11
+forbeslm11=lm(oxidant~wind+temperature+humidity+insolation+u11); summary(forbeslm11)
+# since u11 significant outlier is significant
 
 
 #b)  Use the added variable plot to depict the relationship between response 
@@ -41,6 +47,8 @@ library(car); vif(airpollutionlm)
 
 x=residuals(lm(wind~temperature+humidity+insolation))
 y=residuals(lm(oxidant~temperature+humidity+insolation))
+summary(lm(y~x)) # gives estimate of wind want slope is van fitted regression
+summary(airpollutionlm)
 plot(x,y,main="Added variable plot for wind", xlab="residual of wind",
      ylab="residual of oxidant")
 #What is the meaning of the slope of fitted regression for this scatter plot?
@@ -50,8 +58,10 @@ plot(x,y,main="Added variable plot for wind", xlab="residual of wind",
 #(caused by Xj ) can be identified by looking at the plot of a simple rather than
 #multiple regression model.
 
-# so since the slope is negative, the more wind there is the less oxidant 
-# there is, eventhough these are residuals?
+# So the meaning of the slope is the relationship between y and x once other
+# predictors have been accounted for. It shows the effect of adding 
+# x, wind to the model, So the slope is a estimate of the wind in our case.
+
 avPlots(airpollutionlm)
 
 
@@ -94,9 +104,7 @@ summary(lm(oxidant~wind+temperature+humidity)) #Multiple R-squared:0.7964 humidi
 summary(lm(oxidant~wind+temperature+insolation)) #Multiple R-squared:  0.7816 insolation ns
 # since humidity and insolation both aren't significant anymore best fit with
 # step up method is:
-summary(lm(oxidant~wind+temperature)) # does it matter if intercept is not 
-# significant?
-
+summary(lm(oxidant~wind+temperature)) # does not matter intercept not significant
 #The step down method:
 #  1. start with the full model Y = β0 + β1X1 + ... + βp Xp + e;
 #2. test all variables by using the t -test;
@@ -119,3 +127,5 @@ newxdata=data.frame(wind=33,temperature=54,humidity=77,insolation=21)
 predict(airpolllm,newxdata,interval="prediction",level=0.95)
 predict(airpolllm,newxdata,interval="confidence",level=0.95)
 # confidence is for population mean, prediction is for individual observation
+#Difference: prediction interval is larger because it also takes error 
+# into account

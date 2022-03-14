@@ -1,14 +1,18 @@
 #1a
 #Discuss whether a contingency table test is appropriate here. 
-#It is appropriate since the data can be considered categorical and the
-#condition of the chi-squared test are also met since more than 80% of the 
-#expected counts are above 5.
+#It is appropriate since the data can be considered categorical and frequencies
+# and the condition of the chi-squared test are also met since more than 80% 
+# of the expected counts are above 5.
 
 data = read.table("nauseatable.txt", header=TRUE)
 data
 
 chisqdata =chisq.test(data)
 chisqdata
+chisqdata$residuals
+
+# looking at residuals: Chlorpromazine is no neasua, 
+# 100mg is naesea en 150mg a bit nausea
 
 #pvalue = 0.03642 which is smaller than 0.05. Therefore H0 is rejected and
 #H1 is accepted which means that the row variable and column variable are 
@@ -75,3 +79,7 @@ p_value
 #matters to reduce the nausea of the patient. The difference between the tests 
 #is that chisquare needs atleast 5 samples for 80% of the expected counts, but
 #these data has that so we could just use the chisquare
+
+# Equality between tests: use same test statistic, however the permutation test 
+# resamples the data and it is still same p-value -> original sample has a good
+# distribution
