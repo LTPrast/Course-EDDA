@@ -36,14 +36,13 @@ ggplot(fruitflies) +
 ggplot(fruitflies) +
   geom_boxplot(aes(x = thorax, y=loglongevity, fill = activity)) 
 
-# stripchart?
 ```
 **One-way Anova:**
 ```{r}
 aov=lm(loglongevity~activity,data=fruitflies)
 anova(aov)
 ```
-p-value < 0.05 so there is significant differences between the activity groups, i.e., sexual activity influences longevity.
+p-value < 0.05 so there is significant differences between the activity groups, i.e., activity influences longevity.
 
 Checking assumptions:
 ```{r}
@@ -56,6 +55,7 @@ plot(fitted(aov),residuals(aov), main = "Residual Plot")
 leveneTest(loglongevity~activity,data=fruitflies)
 shapiro.test(residuals(aov))
 ```
+Levene's test passed, Shapiro didn't.
 
 From the plots and tests, the assumption of equal variances is met, but we cannot assume normality, therefore the requirements for the one-way Anova test aren't met.
 
@@ -66,7 +66,7 @@ Therefore, need to use Kruskal-Wallis test instead.
 kruskal.test(loglongevity~activity,data=fruitflies)
 ```
 However, Kruskal-Wallis test comes at the same conclusion as the one-way Anova test:
-p-value < 0.05 so there is significant differences between the activity groups, i.e., sexual activity influences longevity.
+p-value < 0.05 so there is significant differences between the activity groups, i.e., activity influences longevity.
 
 **Estimated longevities for the three conditions:**
 ```{r}
@@ -87,30 +87,41 @@ anova(fruitflies2,fruitflies1)
 p-value < 0.05 so again activity has a significant influence on longevity (now considering thorax but not the interaction between thorax and activity).
 
 ```{r}
-qqnorm(residuals(fruitflies1))
+par(mfrow=c(1,2))
+qqnorm(residuals(fruitflies1)); qqline(residuals(fruitflies1))
 plot(fitted(fruitflies1),residuals(fruitflies1))
 ```
-ANCOVA however assumes normality, and we have shown in part (a) that we cannot assume normality.
+```{r}
+shapiro.test(residuals(fruitflies1))
+```
+Passed the normality test so meets all assumptions for ANCOVA.
 
 ```{r}
 summary(fruitflies1)
 ```
 Does sexual activity increase or decrease longevity?
-The estimates for all three types of activity are >0 so activity increases longevity. 
+The estimates for all three types of activity are >0 and increase from low to isolated to high, and so activity increases longevity. 
 
 ```{r}
-mid <- median(fruitflies$thorax)
-fruitflies_min <- fruitflies[fruitflies$thorax < mid, ]
-fruitflies_max <- fruitflies[fruitflies$thorax >= mid, ]
+max_thorax = max(fruitflies$thorax)
+min_thorax = min(fruitflies$thorax)
 
-summary(lm(loglongevity~thorax+activity,data=fruitflies_min))
-summary(lm(loglongevity~thorax+activity,data=fruitflies_max))
+predict(fruitflies1,data.frame(thorax = min_thorax, activity = "high"), interval = "confidence")
+predict(fruitflies1,data.frame(thorax = min_thorax, activity = "isolated"), interval = "confidence")
+predict(fruitflies1,data.frame(thorax = min_thorax, activity = "low"), interval = "confidence")
+
+predict(fruitflies1,data.frame(thorax = max_thorax, activity = "high"), interval = "confidence")
+predict(fruitflies1,data.frame(thorax = max_thorax, activity = "isolated"), interval = "confidence")
+predict(fruitflies1,data.frame(thorax = max_thorax, activity = "low"), interval = "confidence")
 ```
+
 What are the estimated longevities for the three groups, for flies with the minimal and maximal thorax lengths?
+
 For flies with minimal thorax: 
-high: 0.4755, isolated: 0.4835, low: 0.2941 
+high: 17.5, isolated: 37.6, low: 30.6 
+
 For flies with maximal thorax: 
-high: 3.0524, isolated: 0.3981, low: 0.2772
+high: 57.3, isolated: 77.4, low: 70.3
 
 ### c)
 
@@ -122,31 +133,29 @@ plot(loglongevity~thorax, col=colors, pch=16, data=fruitflies)
 legend("topleft", legend = levels(fruitflies$activity),
       col = c("#00AFBB", "#E7B800", "#FC4E07"), pch = 16, title="activity")
 ```
-```{r}
-fruitflies1=lm(loglongevity~activity+thorax,data=fruitflies)
-fruitflies2=lm(loglongevity~activity,data=fruitflies)
-anova(fruitflies2,fruitflies1)
-```
-
-p-value < 0.05 so thorax length influences longevity
-
-```{r}
-qqnorm(residuals(fruitflies1))
-plot(fitted(fruitflies1),residuals(fruitflies1))
-```
-
-```{r}
-summary(fruitflies1)
-```
-thorax =2.9790 > 0 so as thorax length increases, longevity increases, as can also be seen by the plot.
 
 *whether this dependence is similar under all three conditions of sexual activity.*
-Yes because all three types of activity have estimates >0?
+```{r}
+plot(longevity~thorax,pch=unclass(activity), data=fruitflies)
+for (i in c("high", "isolated", "low"))  abline(lm(longevity~thorax,data=fruitflies[fruitflies$activity==i,]))
+```
+Plot shows no indication that the true lines would not be parallel.
+
+```{r}
+fruitflies3=lm(loglongevity~activity*thorax,data=fruitflies)
+anova(fruitflies3)
+```
+p-value=0.15 >0.05 so there is no interaction between factor activity and predictor thorax.
+
+```{r}
+summary(fruitflies3)
+```
+activityisolated:thorax & activitylow:thorax p-value > 0.05, again confirming that there is no interaction/dependence between activity and thorax.
 
 ### d)
-Both analyses came to the same conclusion, that activity significantly influences longevity, and the higher the activity the longer the longevity. However, by including thorax length in the analysis, we found out that thorax also significantly influences longevity, and the higher the thorax length, the longer the longevity. So I prefer the analysis with thorax length because it gives a more comprehensive analysis of influences in longevity.
+Both analyses (the Kruskal-Wallis and ANCOVA tests) came to the same conclusion, that activity significantly influences longevity, and the higher the activity the longer the longevity. Neither of the analyses is wrong.
 
-The assumptions for both analyses aren't met?
+By including thorax length in the analysis, we found out that thorax also significantly influences longevity, and the higher the thorax length, the longer the longevity. So I prefer the analysis with thorax length because it gives a more comprehensive analysis of influences in longevity.
 
 ### e)
 
@@ -159,11 +168,19 @@ anova(fruitflies2,fruitflies1)
 p-value still < 0.05
 
 ```{r}
-qqnorm(residuals(fruitflies1))
+par(mfrow=c(1,2))
+qqnorm(residuals(fruitflies1)); qqline(residuals(fruitflies1))
 plot(fitted(fruitflies1),residuals(fruitflies1))
 ```
-More normal?
+```{r}
+shapiro.test(residuals(fruitflies1))
+```
 
-Was it wise to use the logarithm as response?
+```{r}
+par(mfrow=c(2,1))
+hist(fruitflies$loglongevity)
+hist(fruitflies$longevity)
+```
 
+The histograms and the Shapiro tests confirm that longevity is more normal than loglongevity, and since the ANCOVA analysis relies on normality, it was not wise to use the logarithm as response.
 

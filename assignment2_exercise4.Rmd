@@ -34,68 +34,9 @@ psi_model <- glm(passed~gpa+psi, data = psidata, family = binomial)
 psi_model2 <- glm(passed~gpa, data = psidata, family = binomial)
 anova(psi_model2,psi_model,test="Chisq")
 ```
-p-value > 0.05 and so is not significant. No evidence that psi  works.
+p-value < 0.05 and so there is significant dependence between psi and passed. So psi works.
 
-### b)
-
-```{r}
-psidata$gpa <- round(psidata$gpa ,digit=1)
-psidata$gpa=factor(psidata$gpa); psidata$psi=factor(psidata$psi)
-psi_model2 <- glm(passed~gpa+psi, data = psidata, family = binomial)
-summary(psi_model2)
-```
-round gpa?
-
-Estimated probability that student passes with gpa=3 and receives psi
-= exp(41.5 + 41.5) = exp(83) = 1.11e+36 ?
-
-Estimated probability that student passes with gpa=3 and doesn't receive psi
-= exp(41.5 - 64.1) = exp(-22.6) = 1.53e-10
-
-Comment?
-
-```{r}
-41.5 - 64.1
-exp(41.5 - 64.1)
-```
-
-
-### c)
-
-relative change in odds of passing with psi rather than without
-= exp(49.8 + 76.3) = 5.81e+54 (correct?)
-
-Interpretation: 
-Students receiving psi rather than not would increase their odds of passing by a factor of 5.81e+54 
-
-```{r}
-psi_interaction=glm(passed~gpa*psi,data=psidata,family=binomial)
-anova(psi_interaction,test="Chisq")
-```
-p-value=1 > 0.05 so there is no interaction between receiving psi and age, 
-so the odds estimated above is not dependent on gpa.
-
-### d)
-
-```{r}
-psidata$gpa <- as.numeric(as.character(psidata$gpa))
-
-matrix=xtabs(~gpa+psi,data=psidata)
-matrix
-```
-
-```{r}
-chisq.test(matrix,simulate.p.value=TRUE)
-```
-p-value > 0.05 so gpa and psi are independent of one another.
-
-Therefore came at the same conclusion as the first analysis (checking interaction with anova)
-
-### e)
-
-In the contingency table analysis, many of the counts are 0 (not >1) and 100% of the counts are less than 5 (when no more than 20% should be <5), making this approximation by the
-chi-square test not reliable.
-
+Checking assumptions:
 ```{r}
 model <- glm(passed~., data = psidata, family = binomial)
 probabilities <- predict(model, type = "response")
@@ -116,7 +57,7 @@ ggplot(mydata, aes(logit, predictor.value))+
   theme_bw() + 
   facet_wrap(~predictors, scales = "free_y")
 ```
-(passed shouldn't be included)
+(second plot shouldn't be included)
 
 We can see that there is a linear relationship between continuous predictor variables (gpa) and the logit of the outcome (passed). Therefore, this assumption is met.
 
@@ -136,9 +77,78 @@ car::vif(model)
 ```
 Both values are less than 5, so there is no high intercorrelations (i.e. multicollinearity) among the predictors.
 
+Therefore all assumptions for the logistic regression are met.
+
+### b)
+
+```{r}
+psidata$gpa=factor(psidata$gpa); psidata$psi=factor(psidata$psi)
+psi_model2 <- glm(passed~psi+gpa, data = psidata, family = binomial)
+summary(psi_model2)
+```
+
+```{r}
+ predict(psi_model2,data.frame(psi="1",gpa="3.03"),type="response")
+
+ predict(psi_model2,data.frame(psi="0",gpa="3.03"),type="response")
+```
+
+Estimated probability that student passes with gpa=3 and receives psi
+= 1
+
+Estimated probability that student passes with gpa=3 and doesn't receive psi
+= 2.9e-12 
+
+Comment: a student with 3.03 gpa who receives psi will almost certainly pass while the one who doesn't will almost certainly fail.
+
+### c)
+
+```{r}
+psi_model3 = glm(passed~psi, data = psidata, family = binomial)
+predict(psi_model3,data.frame(psi="0"),type="response")
+predict(psi_model3,data.frame(psi="1"),type="response")
+```
+relative change in odds = 0.571/0.167 = 3.42
+OR
+relative change in odds = exp(4.98e+01 + 7.63e+01) = 5.81e+54
+?
+
+Interpretation: 
+Students receiving psi rather than not would increase their odds of passing by a factor of 5.81e+54 
+
+```{r}
+psi_interaction=glm(passed~gpa*psi,data=psidata,family=binomial)
+anova(psi_interaction,test="Chisq")
+```
+p-value=1 > 0.05 so there is no interaction between receiving psi and age, 
+so the odds estimated above is not dependent on gpa.
+
+### d)
+
+```{r}
+matrix=xtabs(~passed+psi,data=psidata)
+matrix
+```
+
+```{r}
+chisq.test(matrix,simulate.p.value=TRUE)
+```
+p-value < 0.05 so psi and passed are dependent of one another.
+
+Since our table is 2x2, we can use Fisher’s test to compute an exact p-value:
+```{r}
+fisher.test(matrix)
+```
+Same p-value as the chisquare approximation.
+
+Therefore came at the same conclusion from the first analysis (part a)
+
+In the contingency table analysis, all of the counts are >1 and 1 count (25% of the counts) is less than 5 (when no more than 20% should be <5), making this approximation by the chi-square test not reliable.
 
 
-Therefore all assumptions for the logistic regression are met, unlike the assumptions for the contingency table analysis. On the other hand, the contingency table analysis directly tests the dependence between two factors, while the logistic regression only tests whether there is interaction between them.
+### e)
+
+All assumptions for the logistic regression are met, unlike the assumptions for the contingency table analysis. In logistic regression we were able to include gpa in the analysis but not in the contingency table. Since we're primarily interested in whether psi works (not in predicting how well it works in certain cases) then contingency table analysis is more appropriate/relevant.
 
 
 
