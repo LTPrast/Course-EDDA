@@ -14,18 +14,16 @@ chisqdata$residuals
 # looking at residuals: Chlorpromazine is no neasua, 
 # 100mg is naesea en 150mg a bit nausea
 
-#pvalue = 0.03642 which is smaller than 0.05. Therefore H0 is rejected and
+#pvalue = 0.03642 (of 0.04 dat geeft ie opeens nu aan) which is smaller than 0.05. Therefore H0 is rejected and
 #H1 is accepted which means that the row variable and column variable are 
-#dependent, which in this case means that it does matter which medicine works 
-#best against nausea for the patient
-
-#Where are the main inconsistencies?
-#Dont know?
+#dependent, which in this case means that it does matter which medicine is taken
+#because they dont work equally well against nausea for the patient
 
 #1b
 no_nausea_data = data$Incidence.of.no.nausea
 nausea_data = data$Incidence.of.Nausea
 
+#make a vector with 1's for nausea patinets and 0 for no nausea patient
 a = as.logical(rep(1, times = nausea_data[1]))
 b = as.logical(rep(0, times = no_nausea_data[1]))
 a2 = as.logical(rep(1, times = nausea_data[2]))
@@ -34,6 +32,7 @@ a3 = as.logical(rep(1, times = nausea_data[3]))
 b3 = as.logical(rep(0, times = no_nausea_data[3]))
 nausea = c(a,b,a2,b2,a3,b3)
 
+#make a vector with the the number of patients per medicine
 c = rep('Chlorpromazine', times = nausea_data[1])
 d = rep('Chlorpromazine', times = no_nausea_data[1])
 e = rep('Pentobarbital(100mg)', times = nausea_data[2])
@@ -49,6 +48,7 @@ df <- data.frame(
   nausea = nausea
 )
 
+#do a permutation test with chisquare as test stastics
 B=1000
 Tstar = c()
 for (i in 1:B){
@@ -81,5 +81,7 @@ p_value
 #these data has that so we could just use the chisquare
 
 # Equality between tests: use same test statistic, however the permutation test 
-# resamples the data and it is still same p-value -> original sample has a good
-# distribution
+# resamples the data and both are still below 0.05 -> original sample has a good
+# distribution. p-values can vary between normal chisquare and permutation test
+# because of resampling
+

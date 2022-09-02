@@ -2,18 +2,24 @@
 data = read.table("awards.txt", header=TRUE)
 head(data)
 
-hist(data$num_awards)
-
-#needed because otherwise programm would be numeric (now it is a factor)
-data <- within(data, {prog <- factor(prog, levels=1:3, labels=c("General", "Academic", "Vocational"))})
-
-awards=glm(num_awards~prog, family=poisson,data=data)
+#awards=glm(num_awards~prog, family=poisson,data=data)
 
 #Investigate whether the type of program influences the number of awards by 
 #performing a Poisson regression, without taking variable math into account
 summary(awards)
-#general (1) has a p value<0.05 (0.005), academic (2) has a p value<0.05 (0.001)
-#vocational has a p value>0.05 (0.072)
+
+hist(data$num_awards)
+
+#needed because otherwise programm would be numeric (now it is a factor)
+data2 <- within(data, {prog <- factor(prog, levels=1:3, labels=c("Vocational", "General", "Academic"))})
+
+awards=glm(num_awards~prog, family=poisson,data=data2)
+
+#Investigate whether the type of program influences the number of awards by 
+#performing a Poisson regression, without taking variable math into account
+summary(awards)
+#general (1) has a p value<0.05 (0.005) so sign, academic (2) has a p value<0.05 (0.001) so sign
+#vocational has a p value>0.05 (0.072) so not sign
 
 #Estimate the numbers of awards for all the three types of program. 
 coef_awards_gen = exp(coef(awards)[1]); coef_awards_aca = exp(coef(awards)[1] + coef(awards)[2]);coef_awards_voc = exp(coef(awards)[1] + coef(awards)[3])

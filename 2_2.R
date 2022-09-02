@@ -62,6 +62,8 @@ plot(x,y,main="Added variable plot for wind", xlab="residual of wind",
 # predictors have been accounted for. It shows the effect of adding 
 # x, wind to the model, So the slope is a estimate of the wind in our case.
 
+
+#goede plot om effect van elke predcitor op de response!!
 avPlots(airpollutionlm)
 
 
@@ -76,6 +78,7 @@ plot(residuals(airpollutionlm),fitted(airpollutionlm)) # check estimates y
 # normality check
 qqnorm(residuals(airpollutionlm))
 shapiro.test(residuals(airpollutionlm))
+#passed de normality check dus je mag het lineair model gebruiken
 
 #c)  Fit a linear regression model to the data. Use both the step-up and 
 #step-down methods to find the best model. If step-up and step-down yield 
@@ -91,20 +94,23 @@ shapiro.test(residuals(airpollutionlm))
 # Dont use day as variable since this can be seen as an id variable
 summary(lm(oxidant~wind)) #Multiple R-squared:0.5863 and significant
 summary(lm(oxidant~temperature)) #Multiple R-squared: 0.576 and significant
-summary(lm(oxidant~humidity)) #Multiple R-squared:0.124, humidity ns
-summary(lm(oxidant~insolation)) #Multiple R-squared:0.2552, intercept ns
+summary(lm(oxidant~humidity)) #Multiple R-squared:0.124, humidity not sign
+summary(lm(oxidant~insolation)) #Multiple R-squared:0.2552, intercept not sign
 
 # we take the variable with the highest increase in the multiple R-squared and 
 # continue
 summary(lm(oxidant~wind+temperature)) #Multiple R-squared:0.7773, intercept ns
 summary(lm(oxidant~wind+humidity)) #Multiple R-squared: 0.5913, humidity ns
 summary(lm(oxidant~wind+insolation)) #Multiple R-squared: 0.6613, all significant
+
 # temperature has largest multiple R-sqaured and is significant
 summary(lm(oxidant~wind+temperature+humidity)) #Multiple R-squared:0.7964 humidity ns
 summary(lm(oxidant~wind+temperature+insolation)) #Multiple R-squared:  0.7816 insolation ns
+
 # since humidity and insolation both aren't significant anymore best fit with
 # step up method is:
 summary(lm(oxidant~wind+temperature)) # does not matter intercept not significant
+
 #The step down method:
 #  1. start with the full model Y = β0 + β1X1 + ... + βp Xp + e;
 #2. test all variables by using the t -test;
@@ -112,9 +118,16 @@ summary(lm(oxidant~wind+temperature)) # does not matter intercept not significan
 #variable and go back to step 2.
 summary(lm(oxidant~wind+temperature+humidity+insolation))
 # insolation has highets p-value: 0.65728 so remove
+
 summary(lm(oxidant~wind+temperature+humidity))
 # humidity ns with p=0.131 so remove
+
 airpolllm <- (lm(oxidant~wind+temperature));summary(airpolllm)
+
+
+airpolllm2 <- (lm(oxidant~wind));summary(airpolllm2)
+
+airpolllm3 <- (lm(oxidant~temperature));summary(airpolllm3)
 # all remaining variables are significant so this model is the best fit with
 # the step up method. Both methods return same model however if they didnt:
 # Look a multiple R-squared -> higher means better fit and if comparable than
@@ -124,8 +137,14 @@ airpolllm <- (lm(oxidant~wind+temperature));summary(airpolllm)
 #the model you preferred in c) for wind=33, temperature=54, humidity=77 and 
 #insolation=21.
 newxdata=data.frame(wind=33,temperature=54,humidity=77,insolation=21)
-predict(airpolllm,newxdata,interval="prediction",level=0.95)
 predict(airpolllm,newxdata,interval="confidence",level=0.95)
+#  fit  lwr  upr
+#1 8.8 1.66 15.9
+
+predict(airpolllm,newxdata,interval="prediction",level=0.95)
+#  fit    lwr  upr
+#1 8.8 -0.562 18.2
+
 # confidence is for population mean, prediction is for individual observation
 #Difference: prediction interval is larger because it also takes error 
 # into account
